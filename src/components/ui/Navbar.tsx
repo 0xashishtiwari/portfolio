@@ -39,9 +39,9 @@ export default function Navbar() {
       </div>
     
     
-        <Button className=' items-center gap-2 bg-[#F9F9F9] mr-5 cursor-pointer md:flex hidden' >
-            <ArrowBigDownIcon size={20} />
+        <Button asChild className=' items-center gap-2 bg-[#F9F9F9] mr-5 cursor-pointer md:flex hidden' >
             <Link href="/resume.pdf" target="_blank" >
+            <ArrowBigDownIcon size={20} />
                 Resume
                 
             </Link>

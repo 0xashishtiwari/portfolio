@@ -34,7 +34,7 @@ const NavbarMobile = ({
     <div className="md:hidden">
       <Sheet open={isNavbarOpen} onOpenChange={setIsNavbarOpen}>
         <SheetTrigger asChild>
-          <Button variant="neutral" size="icon" className="cursor-pointer">
+          <Button variant="neutral" size="icon" className="cursor-pointer ">
             <Menu size={20} />
           </Button>
         </SheetTrigger>

@@ -30,6 +30,15 @@ export default function Navbar() {
   return (  
     <nav className="relative w-full border-b-2 border-foreground  text-foreground">
       <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
+        {/* Mobile - Hamburger on left */}
+        <div className="md:hidden">
+          <NavbarMobile
+            items={items}
+            isNavbarOpen={isNavbarOpen}
+            setIsNavbarOpen={setIsNavbarOpen}
+          />
+        </div>
+
         {/* Desktop */}
         <div className="hidden md:flex flex-1 items-center justify-center gap-6 lg:gap-16">
           {items.map((item) => (
@@ -44,7 +53,8 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3 sm:gap-4 right-0">
+        {/* Mobile - Theme toggle on right, Desktop - Theme toggle + Resume */}
+        <div className="flex items-center gap-3 sm:gap-4">
           <ThemeToggle />
 
           <Button asChild variant={'neutral'} className="hidden md:flex items-center gap-2 text-foreground">
@@ -53,13 +63,6 @@ export default function Navbar() {
               Resume
             </Link>
           </Button>
-
-          {/* Mobile */}
-          <NavbarMobile
-            items={items}
-            isNavbarOpen={isNavbarOpen}
-            setIsNavbarOpen={setIsNavbarOpen}
-          />
         </div>
       </div>
     </nav>

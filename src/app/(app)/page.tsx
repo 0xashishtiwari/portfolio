@@ -1,50 +1,72 @@
 "use client"
-import React from 'react'
-import { TextGenerateEffect } from '@/components/ui/text-generate-effect'
+
+import React from "react"
 import { motion } from "framer-motion"
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
+import { Github, Linkedin, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 const Home = () => {
   return (
-    <div className='flex flex-col lg:flex-row items-center justify-center lg:justify-between min-h-screen w-full px-6 sm:px-8 md:px-12 lg:px-24 py-16 bg-[#F9F9F9] gap-12'>
+    <div className="min-h-[calc(100vh-200px)] sm:min-h-[80vh] flex items-center px-4 sm:px-6 py-8 sm:py-12 pb-16 sm:pb-20">
+      <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-8 sm:gap-12 lg:gap-16">
 
-      {/* Left - Text */}
-      <div className="flex flex-col w-full max-w-3xl text-center lg:text-left">
-
-        <TextGenerateEffect
-          words={`Hello, I'm **Ashish Tiwari**
-**Software Developer**
-I build thoughtful, scalable web experiences.
-Based in India.`}
-          className="
-            text-2xl 
-            sm:text-4xl 
-            md:text-5xl 
-            lg:text-5xl 
-            xl:text-6xl
-            leading-[1.2] 
-            tracking-tight
-            font-semibold
-          "
-        />
-
-      </div>
-
-      {/* Right - SVG (Desktop Only) */}
-      <div className='hidden lg:flex items-center justify-center w-full lg:w-1/2'>
+        {/* LEFT SECTION */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="
-            w-full 
-            max-w-3xl 
-            xl:max-w-4xl 
-            2xl:max-w-5xl
-          "
+          transition={{ duration: 0.6 }}
+          className="flex-1 space-y-6 sm:space-y-10 text-center lg:text-left w-full"
+        >
+          <TextGenerateEffect
+            words={`Hi, I'm **Ashish**.\nA software engineer passionate about building impactful products and exploring the intersection of technology and creativity.`}
+            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light leading-[1.15] tracking-tight max-w-2xl whitespace-pre-line"
+          />
+
+          {/* Social Icons */}
+          <div className="flex justify-center lg:justify-start gap-5">
+            <Button asChild variant="reverse" className="cursor-pointer">
+              <a
+                href="https://www.linkedin.com/in/ashiishtiwarii/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Linkedin size={22} />
+              </a>
+            </Button>
+
+            <Button asChild variant="reverse" className="cursor-pointer">
+              <a
+                href="https://github.com/0xashishtiwari"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github size={22} />
+              </a>
+            </Button>
+
+            <Button asChild variant="reverse" className="cursor-pointer">
+              <a
+                href="https://x.com/1xashishtiwari"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <X size={22} />
+              </a>
+            </Button>
+          </div>
+        </motion.div>
+
+        {/* RIGHT SECTION */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="w-full max-w-[280px] sm:max-w-sm md:max-w-md lg:max-w-lg lg:flex-1"
         >
           <svg
             viewBox="0 0 889 596"
-            className="w-full h-auto scale-110 xl:scale-125"
+            className="w-full h-auto max-h-[280px] sm:max-h-[400px] lg:max-h-none"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -90,8 +112,8 @@ Based in India.`}
           </defs>
           </svg>
         </motion.div>
-      </div>
 
+      </div>
     </div>
   )
 }

@@ -31,7 +31,7 @@ const NavbarMobile = ({
   setIsNavbarOpen,
 }: NavbarMobileProps) => {
   return (
-    <div className="md:hidden absolute right-4">
+    <div className="md:hidden">
       <Sheet open={isNavbarOpen} onOpenChange={setIsNavbarOpen}>
         <SheetTrigger asChild>
           <Button variant="neutral" size="icon" className="cursor-pointer">
@@ -41,10 +41,10 @@ const NavbarMobile = ({
 
         <SheetContent
           side="left"
-          className="w-[360px] bg-[#F9F9F9] p-0"
+          className="w-[85vw] max-w-90 bg-background p-0"
         >
           {/* Header */}
-          <SheetHeader className="px-6 py-5 border-b bg-white">
+          <SheetHeader className="px-6 py-5 border-b border-border">
             <SheetTitle className="text-xl font-bold"> Explore </SheetTitle>
           </SheetHeader>
 

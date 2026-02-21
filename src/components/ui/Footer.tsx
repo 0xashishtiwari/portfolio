@@ -1,45 +1,49 @@
-import { Github, Linkedin, X } from "lucide-react";
-import React from "react";
+import { Github, Linkedin, X } from "lucide-react"
+import React from "react"
+import Mandala from "./Mandala"
 
 const Footer = () => {
   return (
-    <footer className="bg-white w-full text-black py-4 border-t-2 border-black mt-10">
-      <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-        
-        <p className="text-sm text-center md:text-left">
-          © 2026 ashishx.in All rights reserved.
+    <footer className="relative w-full py-6 sm:py-8 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pr-20 sm:pr-24 flex flex-col md:flex-row items-center justify-between gap-4">
+
+        <p className="text-sm text-muted-foreground text-center md:text-left">
+          © 2026 ashishx.in. All rights reserved.
         </p>
 
-        <div className="flex items-center mt-4 md:mt-0 space-x-6 mr-5">
-          
+        <div className="flex items-center gap-6">
           <a
             href="https://www.linkedin.com/in/ashiishtiwarii/"
             target="_blank"
             rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-foreground transition-colors  "
           >
-            <Linkedin className="text-gray-500 hover:text-gray-700 transition" size={24} />
+            <Linkedin size={22}/>
           </a>
 
           <a
             href="https://github.com/0xashishtiwari"
             target="_blank"
             rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
-            <Github className="text-gray-500 hover:text-gray-700 transition" size={24} />
+            <Github size={22} />
           </a>
 
           <a
             href="https://x.com/1xashishtiwari"
             target="_blank"
             rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
-            <X className="text-gray-500 hover:text-gray-700 transition" size={24} />
+            <X size={22} />
           </a>
-
         </div>
-      </div>
-    </footer>
-  );
-};
 
-export default Footer;
+      </div>
+      <Mandala />
+    </footer>
+  )
+}
+
+export default Footer

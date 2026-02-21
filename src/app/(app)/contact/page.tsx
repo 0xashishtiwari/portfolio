@@ -1,70 +1,120 @@
 "use client"
 
-import React from 'react'
-import { motion } from 'framer-motion'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
+import React from "react"
+import { motion } from "framer-motion"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import axios  from 'axios'
+import { toast } from "sonner"
 
 const ContactPage = () => {
+
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+
+  const [formData, setFormData] = React.useState({
+    name: "",
+    email: "",
+    message: "",
+  })
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if(!formData.name || !formData.email || !formData.message) {
+      toast.error("Please fill in all fields" , {position: "top-center"})
+      return
+    }
+    try {
+      setIsSubmitting(true)
+      const res = await axios.post('/api/contact', formData)
+
+      if(res.data.success) {
+        toast.success(res.data.message , {position: "top-center"})
+        setFormData({
+          name: "",
+          email: "",
+          message: "",
+        })
+      }else{
+        toast.error("Failed to send message. Please try again later.", {position: "top-center"})
+      }
+
+      
+    } catch (error) {
+      toast.error("Something went wrong. Please try again later." , {position: "top-center"})
+    }
+    
+    finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center px-6 md:px-12 lg:px-20 py-16 ">
-
-      <div className="w-full max-w-7xl flex flex-col lg:flex-row items-center justify-between gap-16">
-
-        {/* Left - Contact Form */}
+    <div className="min-h-screen px-6 py-12">
+      
+      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12 items-start">
+        
+        {/* LEFT - FORM */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="w-full max-w-xl"
+          transition={{ duration: 0.6 }}
+          className="w-full lg:w-1/2 space-y-6"
         >
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">
             Let’s Work Together
           </h1>
 
-          <p className="text-gray-600 mb-8 text-lg">
+          <p className="text-gray-600 text-foreground">
             Have a project in mind? I’d love to hear from you.
           </p>
-
-          <div className="space-y-5">
-            <Input
-              placeholder="Your Name"
-              className="h-12"
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-4">
+              <Input 
+                placeholder="Your Name" 
+                className="h-11" 
+                value={formData.name}
+              
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
             />
 
-            <Input
-              type="email"
-              placeholder="Your Email"
-              className="h-12"
+            <Input 
+              placeholder="Your Email" 
+              className="h-11" 
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
             />
 
             <Textarea
               placeholder="How can I help you?"
-              className="min-h-[140px]"
+              className="min-h-[120px]"
+              value={formData.message}
+              onChange={(e) => setFormData({...formData, message: e.target.value})}
             />
 
-            <Button className="w-full h-12 bg-[#F9F9F9] text-black cursor-pointer">
-              Send Message
+            <Button className=" cursor-pointer text-foreground" disabled={isSubmitting}>
+              {isSubmitting ? "Sending..." : "Send Message"}
             </Button>
           </div>
+          </form>
+
         </motion.div>
 
-        {/* Right - SVG (Desktop Only) */}
-        <div className="hidden lg:flex items-center justify-center w-full lg:w-1/2">
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="w-full max-w-3xl xl:max-w-4xl"
+        {/* RIGHT - SVG */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="w-full lg:w-1/2"
+        >
+          <svg
+            viewBox="0 0 889 596"
+            className="w-full h-auto"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              viewBox="0 0 889 596"
-              className="w-full h-auto scale-110"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-               <g clipPath="url(#clip0_181_1015)">
+              <g clipPath="url(#clip0_181_1015)">
             <g clipPath="url(#clip1_181_1015)">
               <path d="M387.457 438.674C311.494 481.449 354.27 586.913 379.345 591.338C398.658 594.746 462.149 592.792 492.921 591.338L731.134 415.074L591.745 395.899C548.97 395.899 448.228 404.454 387.457 438.674Z" fill="white" />
               <path d="M492.921 591.338C491.822 591.393 494.111 591.281 492.921 591.338ZM492.921 591.338C462.149 592.792 398.658 594.746 379.345 591.338C354.27 586.913 311.494 481.449 387.457 438.674C448.228 404.454 548.97 395.899 591.745 395.899L731.134 415.074L492.921 591.338Z" stroke="black" strokeWidth="2.91102" />
@@ -104,9 +154,8 @@ const ContactPage = () => {
               <rect width="889" height="596" fill="white" />
             </clipPath>
           </defs>
-            </svg>
-          </motion.div>
-        </div>
+          </svg>
+        </motion.div>
 
       </div>
     </div>

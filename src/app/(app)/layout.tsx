@@ -1,5 +1,4 @@
 import GridBackgroundDemo from "@/components/grid-background-demo";
-import BoySvg from "@/components/ui/BoySvg";
 import Footer from "@/components/ui/Footer";
 import Marquee from "@/components/ui/marquee";
 import Navbar from "@/components/ui/Navbar";

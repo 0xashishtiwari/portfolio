@@ -28,7 +28,7 @@ export default function Navbar() {
   const pathname = usePathname()
 
   return (  
-    <nav className="relative w-full border-b border-foreground bg-background text-foreground">
+    <nav className="relative w-full border-b border-foreground  text-foreground">
       <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Desktop */}
         <div className="hidden md:flex flex-1 items-center justify-center gap-6 lg:gap-16">
@@ -44,7 +44,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-3 sm:gap-4 right-0">
           <ThemeToggle />
 
           <Button asChild className="hidden md:flex items-center gap-2 text-foreground">

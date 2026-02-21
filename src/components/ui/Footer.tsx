@@ -4,7 +4,7 @@ import Mandala from "./Mandala"
 
 const Footer = () => {
   return (
-    <footer className="relative w-full overflow-hidden border-t border-border/40 py-8">
+    <footer className="relative w-full overflow-hidden border-border/40 py-8">
       <Mandala />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">

@@ -25,7 +25,7 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} antialiased`}
       > 
-       
+        
         {children}
       </body>
     </html>

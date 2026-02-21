@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import axios  from 'axios'
 import { toast } from "sonner"
+import { SendIcon } from "lucide-react"
 
 const ContactPage = () => {
 
@@ -94,7 +95,8 @@ const ContactPage = () => {
             />
 
             <Button className=" cursor-pointer text-foreground" disabled={isSubmitting}>
-              {isSubmitting ? "Sending..." : "Send Message"}
+              <SendIcon className="mr-2"/> 
+              {isSubmitting ? "Sending..." :  "Send Message"}
             </Button>
           </div>
           </form>

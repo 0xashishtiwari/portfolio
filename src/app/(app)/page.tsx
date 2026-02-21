@@ -3,8 +3,9 @@
 import React from "react"
 import { motion } from "framer-motion"
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
-import { Github, Linkedin, X } from "lucide-react"
+import { ArrowBigRight, ArrowRight, ArrowUpAZIcon, ArrowUpRight, Github, Linkedin, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const Home = () => {
   return (
@@ -19,41 +20,30 @@ const Home = () => {
           className="flex-1 space-y-6 sm:space-y-10 text-center lg:text-left w-full"
         >
           <TextGenerateEffect
-            words={`Hi, I'm **Ashish**.\nA software engineer passionate about building impactful products and exploring the intersection of technology and creativity.`}
+            words={`Hi, I'm **Ashish**\nA software engineer passionate about building impactful products and exploring the intersection of technology and creativity.`}
             className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light leading-[1.15] tracking-tight max-w-2xl whitespace-pre-line"
           />
 
           {/* Social Icons */}
           <div className="flex justify-center lg:justify-start gap-5">
-            <Button asChild variant="reverse" className="cursor-pointer">
+            <Button asChild variant="default" className="cursor-pointer">
               <a
-                href="https://www.linkedin.com/in/ashiishtiwarii/"
+                href="https://codolio.com/profile/heyashish/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Linkedin size={22} />
+              View Codolio
+            <ArrowUpRight size={20} />
               </a>
+            </Button>
+            <Button asChild variant="neutral" className="cursor-pointer">
+              <Link href="/projects" className="flex items-center gap-2">
+              Explore Projects
+              <ArrowRight size={20} />
+              </Link>
             </Button>
 
-            <Button asChild variant="reverse" className="cursor-pointer">
-              <a
-                href="https://github.com/0xashishtiwari"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Github size={22} />
-              </a>
-            </Button>
-
-            <Button asChild variant="reverse" className="cursor-pointer">
-              <a
-                href="https://x.com/1xashishtiwari"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <X size={22} />
-              </a>
-            </Button>
+            
           </div>
         </motion.div>
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from './button'
-import { ArrowBigDownIcon } from 'lucide-react'
+import { ArrowBigDownIcon, ArrowDownToLine } from 'lucide-react'
 import NavbarMobile from '../NavbarMobile'
 import { useState } from 'react'
 import ThemeToggle from './theme-toggle'
@@ -37,7 +37,7 @@ export default function Navbar() {
               key={item.href}
               className="text-foreground"
               asChild
-              variant={pathname === item.href ? 'reverse' : 'default'}
+              variant={pathname === item.href ? 'noShadow' : 'default'}
             >
               <Link href={item.href}>{item.label}</Link>
             </Button>
@@ -47,9 +47,9 @@ export default function Navbar() {
         <div className="flex items-center gap-3 sm:gap-4 right-0">
           <ThemeToggle />
 
-          <Button asChild className="hidden md:flex items-center gap-2 text-foreground">
+          <Button asChild variant={'neutral'} className="hidden md:flex items-center gap-2 text-foreground">
             <Link href="/resume.pdf" target="_blank">
-              <ArrowBigDownIcon size={20} />
+              <ArrowDownToLine size={20} />
               Resume
             </Link>
           </Button>

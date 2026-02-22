@@ -44,7 +44,7 @@ const NavbarMobile = ({
           className="w-[85vw] max-w-90 bg-background p-0"
         >
           {/* Header */}
-          <SheetHeader className="px-6 py-5 border-b border-border">
+          <SheetHeader className="px-6 py-5 border-b-3 border-border">
             <SheetTitle className="text-xl font-bold"> Explore </SheetTitle>
           </SheetHeader>
 

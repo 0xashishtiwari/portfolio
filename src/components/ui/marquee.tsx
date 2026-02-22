@@ -15,7 +15,7 @@ export default function Marquee({ items }: { items: string[] }) {
   ])
 
   return (
-    <div className="relative flex w-full overflow-x-hidden border-y-2 border-foreground bg-background text-foreground font-base">
+    <div className="relative flex w-full overflow-x-hidden border-y-3 border-foreground bg-background text-foreground font-base">
 
       {/* First Layer */}
       <div className="animate-marquee whitespace-nowrap py-6 sm:py-10 flex items-center">

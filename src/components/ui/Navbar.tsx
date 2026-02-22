@@ -28,7 +28,7 @@ export default function Navbar() {
   const pathname = usePathname()
 
   return (  
-    <nav className="relative w-full border-b-2 border-foreground  text-foreground">
+    <nav className="relative w-full border-b-3 border-foreground  text-foreground">
       <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Mobile - Hamburger on left */}
         <div className="md:hidden">

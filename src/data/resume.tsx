@@ -69,18 +69,18 @@ export const DATA = {
 
   work: [
 
-    // {
-    //   company: "Mitre Media",
-    //   href: "https://mitremedia.com/",
-    //   badges: [],
-    //   location: "Toronto, ON",
-    //   title: "Software Engineer",
-    //   logoUrl: "/mitremedia.png",
-    //   start: "May 2017",
-    //   end: "August 2017",
-    //   description:
-    //     "Designed and implemented a robust password encryption and browser cookie storage system in Ruby on Rails. Leveraged the Yahoo finance API to develop the dividend.com equity screener",
-    // },
+    {
+      company: "Mitre Media",
+      href: "https://mitremedia.com/",
+      badges: [],
+      location: "Toronto, ON",
+      title: "Software Engineer",
+      logoUrl: "/mitremedia.png",
+      start: "May 2017",
+      end: "August 2017",
+      description:
+        "Designed and implemented a robust password encryption and browser cookie storage system in Ruby on Rails. Leveraged the Yahoo finance API to develop the dividend.com equity screener",
+    },
   ],
   education: [
     {
@@ -193,21 +193,21 @@ export const DATA = {
   ],
   hackathons: [
     
-    // {
-    //   title: "Portal Hackathon",
-    //   dates: "October 29, 2016",
-    //   location: "Kingston, Ontario",
-    //   description:
-    //     "Developed an internal widget for uploading assignments using Waterloo's portal app",
-    //   image:
-    //     "https://pub-83c5db439b40468498f97946200806f7.r2.dev/hackline/portal-hackathon.png",
-    //   links: [
-    //     {
-    //       title: "Source",
-    //       icon: <Icons.github className="h-4 w-4" />,
-    //       href: "https://github.com/UWPortalSDK/crowmark",
-    //     },
-    //   ],
-    // },
+    {
+      title: "Portal Hackathon",
+      dates: "October 29, 2016",
+      location: "Kingston, Ontario",
+      description:
+        "Developed an internal widget for uploading assignments using Waterloo's portal app",
+      image:
+        "https://pub-83c5db439b40468498f97946200806f7.r2.dev/hackline/portal-hackathon.png",
+      links: [
+        {
+          title: "Source",
+          icon: <Icons.github className="h-4 w-4" />,
+          href: "https://github.com/UWPortalSDK/crowmark",
+        },
+      ],
+    },
   ],
 } as const;

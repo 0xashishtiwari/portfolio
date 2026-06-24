@@ -154,8 +154,8 @@ export const DATA = {
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "/secureWhisper.png",
-      video: "https://cdn.magicui.design/bento-grid.mp4",
+      image: "/SecureWhisper.png",
+      video: "#",
     },
     {
       title: "Check Inly",

@@ -1,47 +1,90 @@
-<div align="center">
-<img alt="Portfolio" src="https://github.com/dillionverma/portfolio/assets/16860528/57ffca81-3f0a-4425-b31d-094f61725455" width="90%">
-</div>
+# Portfolio
 
-# Portfolio [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdillionverma%2Fportfolio)
+A modern and responsive portfolio website built with **Next.js**, **TypeScript**, and **Tailwind CSS** to showcase my projects, experience, skills, and achievements.
 
-Built with next.js, [shadcn/ui](https://ui.shadcn.com/), and [magic ui](https://magicui.design/), deployed on Vercel.
+## Features
 
-# Features
+- Responsive design for all devices
+- Project showcase with detailed descriptions
+- Experience and education timeline
+- Skills and technology stack overview
+- Resume download and preview
+- Contact section with social links
+- GitHub activity integration
+- Smooth animations and modern UI
 
-- Setup only takes a few minutes by editing the [single config file](./src/data/resume.tsx)
-- Built using Next.js 14, React, Typescript, Shadcn/UI, TailwindCSS, Framer Motion, Magic UI
-- Includes a blog
-- Responsive for different devices
-- Optimized for Next.js and Vercel
+## Tech Stack
 
-# Getting Started Locally
+- Next.js
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Lucide React
+- Magic UI
 
-1. Clone this repository to your local machine:
+## Getting Started
 
-   ```bash
-   git clone https://github.com/dillionverma/portfolio
-   ```
+### Prerequisites
 
-2. Move to the cloned directory
+- Node.js 18+
+- npm, pnpm, yarn, or bun
 
-   ```bash
-   cd portfolio
-   ```
+### Installation
 
-3. Install dependencies:
+```bash
+git clone https://github.com/0xashishtiwari/portfolio.git
+cd portfolio
+npm install
+```
 
-   ```bash
-   pnpm install
-   ```
+### Run Development Server
 
-4. Start the local Server:
+```bash
+npm run dev
+```
 
-   ```bash
-   pnpm dev
-   ```
+Open http://localhost:3000 in your browser.
 
-5. Open the [Config file](./src/data/resume.tsx) and make changes
+### Build for Production
 
-# License
+```bash
+npm run build
+npm start
+```
 
-Licensed under the [MIT license](https://github.com/dillionverma/portfolio/blob/main/LICENSE.md).
+## Project Structure
+
+```text
+src/
+├── app/           # App Router pages
+├── components/    # Reusable UI components
+├── data/          # Portfolio data
+├── lib/           # Utility functions
+└── assets/        # Static assets
+```
+
+## Customization
+
+Update the portfolio content inside the data files to modify:
+
+- Personal information
+- Projects
+- Skills
+- Work experience
+- Education
+- Social links
+
+## Deployment
+
+The portfolio can be deployed on:
+
+- Vercel
+- Netlify
+- Railway
+- Any platform supporting Next.js
+
+## License
+
+This project is open source and available under the MIT License.
+
+---

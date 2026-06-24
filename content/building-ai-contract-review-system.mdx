@@ -1,0 +1,134 @@
+---
+
+title: "Building an AI Contract Review System with Next.js and LLMs"
+publishedAt: "2026-06-24"
+updatedAt: "2026-06-24"
+author: "Ashish Tiwari"
+summary: "A deep dive into how I built ContractIQ, an AI-powered platform that analyzes contracts, identifies risks, and generates professional review reports using modern LLMs."
+image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=192&fit=crop"
+---------------------------------------------------------------------------------------
+
+# Building an AI Contract Review System with Next.js and LLMs
+
+Contracts are full of legal jargon, hidden risks, and ambiguous clauses that often require manual review. During the development of **ContractIQ**, I wanted to explore how modern AI models could assist professionals in reviewing contracts faster while maintaining human oversight.
+
+The result was an AI-powered contract review platform capable of extracting clauses, identifying risks, generating recommendations, and producing professional review reports.
+
+## The Problem
+
+Traditional contract review is:
+
+* Time-consuming
+* Prone to human oversight
+* Difficult to scale across large volumes of documents
+
+Many organizations spend hours reviewing agreements to identify:
+
+* Risky clauses
+* Missing obligations
+* Ambiguous language
+* Compliance concerns
+
+This made contract analysis a perfect use case for AI.
+
+## System Architecture
+
+The platform is built using:
+
+* **Next.js**
+* **TypeScript**
+* **PostgreSQL**
+* **Prisma**
+* **Trigger.dev**
+* **GPT-OSS-120B**
+* **Gemini 2.5 Flash**
+
+The workflow follows a simple pipeline:
+
+1. Upload contract PDF
+2. Extract text and clauses
+3. Analyze each clause with AI
+4. Generate risk assessments
+5. Produce recommendations
+6. Create a professional review report
+
+## Why Multiple AI Models?
+
+Instead of relying on a single model, I experimented with multiple LLMs.
+
+### GPT-OSS-120B
+
+Used for:
+
+* Deep clause analysis
+* Risk detection
+* Legal reasoning
+* Recommendation generation
+
+### Gemini 2.5 Flash
+
+Used for:
+
+* Fast summaries
+* Classification tasks
+* Workflow acceleration
+
+This hybrid approach improved both speed and output quality.
+
+## Human-in-the-Loop Review
+
+One challenge with AI systems is trust.
+
+Even the best models can hallucinate or misinterpret legal language.
+
+To address this, I implemented a **human-in-the-loop workflow** where reviewers can:
+
+* Approve AI suggestions
+* Reject inaccurate assessments
+* Add manual annotations
+* Finalize reports before delivery
+
+This keeps humans in control while benefiting from AI automation.
+
+## Real-Time Processing
+
+Contract analysis can take time, especially for large documents.
+
+To improve user experience, I implemented:
+
+* Real-time summary streaming
+* Background job processing
+* Durable workflows with Trigger.dev
+* Automated email delivery
+
+Users receive updates without waiting for long-running tasks to complete.
+
+## Key Lessons Learned
+
+Building ContractIQ taught me several valuable engineering lessons:
+
+* AI products require strong workflow orchestration.
+* Human oversight is critical for high-stakes applications.
+* Prompt engineering alone is not enough; system design matters.
+* Streaming responses significantly improve perceived performance.
+* Reliability becomes more important as AI complexity increases.
+
+## Future Improvements
+
+Some features I plan to explore:
+
+* Clause similarity search using vector databases
+* RAG-based legal knowledge retrieval
+* Multi-document comparison
+* Team collaboration workflows
+* Compliance scoring dashboards
+
+## Conclusion
+
+Building ContractIQ was an excellent opportunity to combine full-stack development, workflow orchestration, and large language models into a practical real-world application.
+
+The project reinforced an important lesson:
+
+<mark>AI is most powerful when it augments human expertise rather than replacing it.</mark>
+
+As AI systems become more capable, designing reliable workflows and maintaining human oversight will remain essential for building trustworthy software.

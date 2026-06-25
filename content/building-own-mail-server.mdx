@@ -1,0 +1,144 @@
+---
+
+title: "Building My Own Mail Server on AWS (And Getting Blocked by Port 25)"
+publishedAt: "2026-06-25"
+updatedAt: "2026-06-25"
+author: "Ashish Tiwari"
+summary: "A weekend experiment to build a mail server with Postfix and Dovecot that turned into a deep dive into SMTP, IMAP, DNS, MX records, and how email really works."
+image: "[https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=192&fit=crop](https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=192&fit=crop)"
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Building My Own Mail Server on AWS (And Getting Blocked by Port 25)
+
+Email is something we all use every day.
+
+Click **Send**, wait a second, and somehow the message lands in someone else's inbox. It feels simple.
+
+Until you decide to build the entire thing yourself.
+
+That's exactly what I did.
+
+My original goal wasn't to create a production-ready mail server. I simply wanted to understand what actually happens after pressing the **Send** button.
+
+So I spun up an EC2 instance, installed **Postfix** and **Dovecot**, bought a domain, and started experimenting.
+
+## The Plan
+
+The plan sounded straightforward.
+
+* Install Postfix
+* Configure Dovecot
+* Point my domain's DNS records
+* Send my first email
+
+Easy... right?
+
+Not exactly.
+
+Everything went smoothly until I tried sending an email.
+
+Nothing happened.
+
+After spending a while checking logs and configurations, I discovered the real culprit.
+
+AWS blocks outbound traffic on **port 25** by default to prevent spam.
+
+So my mail server reached a very interesting state.
+
+It can receive emails perfectly.
+
+It just can't send them.
+
+I've already submitted a request to AWS to unblock port 25, so for now my mail server is patiently waiting for permission to speak.
+
+## The Rabbit Hole
+
+What I expected to be a small weekend project quickly became one of the most educational side projects I've worked on.
+
+I finally understood the difference between **SMTP** and **IMAP**.
+
+SMTP is responsible for sending emails between servers.
+
+IMAP allows clients like Gmail or Outlook to synchronize your mailbox across devices.
+
+I also learned why DNS is one of the most important parts of email.
+
+Without properly configured records, your mail server simply doesn't exist as far as other servers are concerned.
+
+## Understanding DNS Records
+
+Building the server forced me to work with several DNS records that I had previously only heard about.
+
+### MX Records
+
+MX records tell the internet where emails for your domain should be delivered.
+
+Without them, other mail servers have no idea where your inbox lives.
+
+### SPF
+
+SPF specifies which servers are allowed to send emails on behalf of your domain.
+
+It helps reduce spoofing.
+
+### DKIM
+
+DKIM digitally signs outgoing emails so receiving servers can verify they haven't been modified during transit.
+
+### Reverse DNS
+
+Many mail providers also verify reverse DNS records before trusting your server.
+
+Missing this configuration often leads to emails being marked as spam.
+
+## Email Is Basically a Digital Post Office
+
+One realization made everything click.
+
+Email works surprisingly similar to the Indian Post Office.
+
+Your domain acts like the address.
+
+DNS works like the directory that tells everyone where your house is.
+
+MX records point to the correct delivery office.
+
+SMTP transports the letter.
+
+IMAP lets you visit your mailbox whenever you want.
+
+Once I started thinking about email this way, the entire system suddenly made sense.
+
+## What I Learned
+
+This project taught me much more than how to configure Postfix.
+
+It helped me understand:
+
+* How SMTP and IMAP work together
+* Why DNS configuration is critical
+* How MX, SPF and DKIM improve email delivery
+* How mail servers discover one another
+* Why running a reliable mail server is much harder than it first appears
+
+## What's Next?
+
+The immediate goal is getting AWS to approve outbound access on port 25.
+
+Once that happens, I'll configure secure email delivery with TLS, improve spam protection, and experiment with running a fully functional self-hosted mail server.
+
+## Final Thoughts
+
+Nobody asked me to build a mail server.
+
+There are plenty of hosted email providers that solve this problem much better than I ever could.
+
+I built it simply because I was curious.
+
+That's one of the things I love most about software engineering.
+
+Sometimes the best projects aren't the ones that solve a business problem.
+
+They're the ones that answer a question you've been wondering about for a long time.
+
+This project may not replace Gmail anytime soon, but it definitely replaced a lot of "I wonder how that works?" with "Now I know."

@@ -8,6 +8,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 
+
+
+
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -87,6 +90,7 @@ export default function RootLayout({
               {children}
             </div>
             <Navbar />
+
           </TooltipProvider>
         </ThemeProvider>
       </body>

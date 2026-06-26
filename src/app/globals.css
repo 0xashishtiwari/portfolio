@@ -4,9 +4,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-*{
-  cursor: none !important;
-}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
@@ -9,8 +10,7 @@ interface IntroLoaderProps {
   onComplete?: () => void;
 }
 
-const DEER_GIF =
-  "/deer-loader.gif";
+const DEER_GIF = "/deer-loader.gif";
 
 export default function IntroLoader({
   duration = 3200,
@@ -22,6 +22,7 @@ export default function IntroLoader({
   useEffect(() => {
     const start = performance.now();
     let frame: number;
+    let timeout: ReturnType<typeof setTimeout>;
 
     const update = (time: number) => {
       const elapsed = time - start;
@@ -37,7 +38,7 @@ export default function IntroLoader({
       } else {
         setProgress(100);
 
-        setTimeout(() => {
+        timeout = setTimeout(() => {
           setVisible(false);
           onComplete?.();
         }, 450);
@@ -46,20 +47,32 @@ export default function IntroLoader({
 
     frame = requestAnimationFrame(update);
 
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timeout);
+    };
   }, [duration, onComplete]);
 
   return (
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed inset-0 z-[99999] flex items-center justify-center overflow-hidden bg-background px-6"
-          initial={{ opacity: 1 }}
+          className="
+            fixed
+            inset-0
+            z-[99999]
+            flex
+            items-center
+            justify-center
+            overflow-hidden
+            bg-[#f3f3f1]
+            px-6
+          "
+          initial={{ y: 0 }}
           exit={{
-            opacity: 0,
-            scale: 1.015,
+            y: "-100%",
             transition: {
-              duration: 0.65,
+              duration: 0.85,
               ease: [0.76, 0, 0.24, 1],
             },
           }}
@@ -85,7 +98,7 @@ export default function IntroLoader({
                 overflow-hidden
                 rounded-2xl
                 border
-                border-border
+                border-black/[0.08]
                 bg-black
                 shadow-[0_20px_70px_-25px_rgba(0,0,0,0.25)]
               "

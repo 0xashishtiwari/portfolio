@@ -4,17 +4,22 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
-
-
+import IntroLoader from "@/components/DeerPreloader";
 
 
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
   weight: ["400", "500", "600", "700"],
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: "400",
 });
 
 const geistMono = Geist_Mono({
@@ -25,11 +30,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(DATA.url),
+
   title: {
     default: DATA.name,
     template: `%s | ${DATA.name}`,
   },
+
   description: DATA.description,
+
   openGraph: {
     title: `${DATA.name}`,
     description: DATA.description,
@@ -38,6 +46,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
+
   robots: {
     index: true,
     follow: true,
@@ -49,10 +58,12 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+
   twitter: {
     title: `${DATA.name}`,
     card: "summary_large_image",
   },
+
   verification: {
     google: "",
     yandex: "",
@@ -70,27 +81,42 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-background font-sans antialiased relative",
           geist.variable,
-          geistMono.variable
+          geistMono.variable,
+          instrumentSerif.variable
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="light">
           <TooltipProvider delayDuration={0}>
+
+            {/* Intro / Deer Preloader */}
+            <IntroLoader />
+
+            {/* Background grid */}
             <div className="absolute inset-0 top-0 left-0 right-0 h-[100px] overflow-hidden z-0">
               <FlickeringGrid
                 className="h-full w-full"
                 squareSize={2}
                 gridGap={2}
                 style={{
-                  maskImage: "linear-gradient(to bottom, black, transparent)",
-                  WebkitMaskImage: "linear-gradient(to bottom, black, transparent)",
+                  maskImage:
+                    "linear-gradient(to bottom, black, transparent)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, black, transparent)",
                 }}
               />
             </div>
-            <div className="relative z-10 max-w-2xl mx-auto py-12 pb-24 sm:py-24 px-6">
-              {children}
+
+            {/* Main content */}
+            <div className="relative z-10 mx-auto max-w-3xl px-6 py-12 pb-24 sm:py-24">
+              <div className="relative border-x border-border/60 px-6 sm:px-8">
+                {children}
+              </div>
             </div>
+
+            {/* Navbar */}
             <Navbar />
 
+          
           </TooltipProvider>
         </ThemeProvider>
       </body>

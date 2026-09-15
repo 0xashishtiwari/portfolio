@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
@@ -12,14 +11,16 @@ function ProjectImage({ src, alt }: { src: string; alt: string }) {
   const [imageError, setImageError] = useState(false);
 
   if (!src || imageError) {
-    return <div className="w-full h-48 bg-muted" />;
+    return (
+      <div className="aspect-[16/9] w-full bg-muted/40" />
+    );
   }
 
   return (
     <img
       src={src}
       alt={alt}
-      className="w-full h-48 object-cover"
+      className="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-[1.015]"
       onError={() => setImageError(true)}
     />
   );
@@ -48,96 +49,126 @@ export function ProjectCard({
   description,
   dates,
   tags,
-  link,
   image,
   video,
   links,
   className,
 }: Props) {
   return (
-    <div
+    <article
       className={cn(
-        "flex flex-col h-full border border-border rounded-xl overflow-hidden hover:ring-2 cursor-pointer hover:ring-muted transition-all duration-200",
+        "group flex h-full flex-col overflow-hidden rounded-xl border border-border/70 bg-card/40 transition-all duration-300 hover:border-border hover:bg-card/70",
         className
       )}
     >
-      <div className="relative shrink-0">
-        <Link
-          href={href || "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block"
-        >
-          {video ? (
-            <video
-              src={video}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-48 object-cover"
-            />
-          ) : image ? (
-            <ProjectImage src={image} alt={title} />
-          ) : (
-            <div className="w-full h-48 bg-muted" />
-          )}
-        </Link>
+      {/* Image */}
+      <div className="relative shrink-0 overflow-hidden border-b border-border/60">
+        {href ? (
+          <Link
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            {video ? (
+              <video
+                src={video}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-[1.015]"
+              />
+            ) : image ? (
+              <ProjectImage src={image} alt={title} />
+            ) : (
+              <div className="aspect-[16/9] w-full bg-muted/40" />
+            )}
+          </Link>
+        ) : (
+          <>
+            {video ? (
+              <video
+                src={video}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="aspect-[16/9] w-full object-cover"
+              />
+            ) : image ? (
+              <ProjectImage src={image} alt={title} />
+            ) : (
+              <div className="aspect-[16/9] w-full bg-muted/40" />
+            )}
+          </>
+        )}
+
+        {/* Project links */}
         {links && links.length > 0 && (
-          <div className="absolute top-2 right-2 flex flex-wrap gap-2">
+          <div className="absolute right-3 top-3 flex items-center gap-1.5">
             {links.map((link, idx) => (
               <Link
-                href={link.href}
                 key={idx}
+                href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
+                aria-label={link.type}
+                className="flex size-7 items-center justify-center rounded-md border border-white/15 bg-black/60 text-white/90 backdrop-blur-md transition-all hover:bg-black/80 hover:text-white"
               >
-                <Badge
-                  className="flex items-center gap-1.5 text-xs bg-black text-white hover:bg-black/90"
-                  variant="default"
-                >
-                  {link.icon}
-                  {link.type}
-                </Badge>
+                {link.icon}
               </Link>
             ))}
           </div>
         )}
       </div>
-      <div className="p-6 flex flex-col gap-3 flex-1">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex flex-col gap-1">
-            <h3 className="font-semibold">{title}</h3>
-            <time className="text-xs text-muted-foreground">{dates}</time>
+
+      {/* Content */}
+      <div className="flex flex-1 flex-col px-5 py-5 sm:px-6 sm:py-6">
+        {/* Title + date */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h3 className="truncate text-[16px] font-medium tracking-[-0.01em] text-foreground">
+                {title}
+              </h3>
+
+              {href && (
+                <ArrowUpRight
+                  className="size-3.5 shrink-0 text-muted-foreground/60 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
+                  aria-hidden
+                />
+              )}
+            </div>
+
+            <time className="mt-1.5 block text-[11px] tabular-nums text-muted-foreground/70">
+              {dates}
+            </time>
           </div>
-          <Link
-            href={href || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
-            aria-label={`Open ${title}`}
-          >
-            <ArrowUpRight className="h-4 w-4" aria-hidden />
-          </Link>
         </div>
-        <div className="text-xs flex-1 prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
-          <Markdown>{description}</Markdown>
+
+        {/* Description */}
+        <div className="mt-4 flex-1">
+          <div className="prose prose-sm max-w-none text-[13px] leading-6 text-muted-foreground dark:prose-invert">
+            <Markdown>{description}</Markdown>
+          </div>
         </div>
+
+        {/* Technologies */}
         {tags && tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-auto">
+          <div className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1.5">
             {tags.map((tag) => (
-              <Badge
+              <span
                 key={tag}
-                className="text-[11px] font-medium border border-border h-6 w-fit px-2"
-                variant="outline"
+                className="text-[11px] text-muted-foreground/75"
               >
                 {tag}
-              </Badge>
+              </span>
             ))}
           </div>
         )}
       </div>
-    </div>
+    </article>
   );
 }

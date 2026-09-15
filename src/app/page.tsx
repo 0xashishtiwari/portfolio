@@ -1,148 +1,178 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
+"use client";
+
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
-import ContactSection from "@/components/section/contact-section";
-import HackathonsSection from "@/components/section/hackathons-section";
-import ProjectsSection from "@/components/section/projects-section";
-import WorkSection from "@/components/section/work-section";
-import { ArrowUpRight, Code2, FileText, Github, Linkedin } from "lucide-react";
-import GitHubSection from "@/components/section/github-section";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
-import { Download } from "lucide-react";
+import ContactSection from "@/components/section/contact-section";
+import ProjectsSection from "@/components/section/projects-section";
+import GitHubSection from "@/components/section/github-section";
+
+import {
+  ArrowUpRight,
+  Code2,
+  FileText,
+  Github,
+  Linkedin,
+} from "lucide-react";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import { Button } from "@/components/ui/button";
+
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
   return (
-    <main className="min-h-dvh flex flex-col gap-11 relative">
+    <main className="relative flex min-h-dvh flex-col gap-11">
+
+      {/* Hero */}
       <section id="hero">
-        <div className="mx-auto w-full max-w-2xl space-y-8">
-          <div className="gap-2 gap-y-6 flex flex-col md:flex-row justify-between">
-            <div className="gap-2 flex flex-col order-2 md:order-1">
-              <BlurFadeText
-                delay={BLUR_FADE_DELAY}
-                className="text-3xl font-semibold tracking-tighter sm:text-4xl lg:text-5xl"
-                yOffset={8}
-                text={`Namaste, I'm ${DATA.name.split(" ")[0]}`}
-              />
-              <BlurFadeText
-                className="text-muted-foreground max-w-[600px] md:text-lg lg:text-xl"
-                delay={BLUR_FADE_DELAY}
-                text={DATA.description}
-              />
+        <div className="mx-auto w-full max-w-2xl">
+          <div className="flex flex-col gap-2 py-4">
 
-              <BlurFade delay={BLUR_FADE_DELAY * 2}>
-                <div className="flex items-center gap-3 mt-4">
-                   <Link href="/Ashish_Tiwari_Resume.pdf" target="_blank">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button size="icon" variant="outline">
-                          <FileText className="size-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Resume</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </Link>
+            <BlurFade delay={BLUR_FADE_DELAY}>
+              <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                Hello, I&apos;m
+              </p>
+            </BlurFade>
 
-                  <Link href="https://github.com/0xashishtiwari" target="_blank">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button size="icon" variant="outline">
-                          <Github className="size-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>GitHub</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </Link>
+            <BlurFade delay={BLUR_FADE_DELAY * 2} yOffset={6}>
+              <h1
+                className="
+                  text-4xl
+                  font-medium
+                  leading-[1.08]
+                  tracking-[-0.045em]
+                  text-foreground
+                  sm:text-5xl
+                  
+                "
+              >
+                Ashish. 
+              </h1>
+            </BlurFade>
 
-                  <Link href="https://linkedin.com/in/ashiishtiwarii" target="_blank">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button size="icon" variant="outline">
-                          <Linkedin className="size-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>LinkedIn</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </Link>
+            <BlurFade delay={BLUR_FADE_DELAY * 3} yOffset={6}>
+              <p className="mt-2 max-w-[580px] text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+                {DATA.description}
+              </p>
+            </BlurFade>
 
-                  <Link href="https://leetcode.com/1xashishtiwari" target="_blank">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button size="icon" variant="outline">
-                          <Code2 className="size-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>LeetCode</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </Link>
-                </div>
-              </BlurFade>
+            <BlurFade delay={BLUR_FADE_DELAY * 4}>
+              <div className="mt-5 flex items-center gap-2">
+  {[
+    {
+      label: "Resume",
+      href: "/resume.pdf",
+      icon: FileText,
+    },
+    {
+      label: "GitHub",
+      href: "https://github.com/0xashishtiwari",
+      icon: Github,
+    },
+    {
+      label: "LinkedIn",
+      href: "https://linkedin.com/in/ashiishtiwarii",
+      icon: Linkedin,
+    },
+    {
+      label: "LeetCode",
+      href: "https://leetcode.com/1xashishtiwari",
+      icon: Code2,
+    },
+  ].map(({ label, href, icon: Icon }) => (
+    <Link
+      key={label}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="
+        group
+        flex
+        h-9
+        items-center
+        gap-2
+        overflow-hidden
+        rounded-full
+        border
+        border-border
+        bg-background/70
+        px-3
+        backdrop-blur-sm
+        transition-all
+        duration-300
+        hover:gap-2.5
+        hover:px-4
+        hover:bg-foreground
+        hover:text-background
+      "
+    >
+      <Icon className="size-3.5 shrink-0 transition-transform duration-300 group-hover:scale-110" />
 
-            </div>
-            <BlurFade delay={BLUR_FADE_DELAY} className="order-1 md:order-2">
-              <Avatar className="w-36 h-36 md:w-40 md:h-40 overflow-hidden rounded-full">
-                <AvatarImage
-                  src={DATA.avatarUrl}
-                  alt={DATA.name}
-                  className="w-full h-full object-cover object-center scale-110"
-                />
-                <AvatarFallback>{DATA.initials}</AvatarFallback>
-              </Avatar>
+      <span
+        className="
+          max-w-0
+          overflow-hidden
+          whitespace-nowrap
+          font-mono
+          text-[10px]
+          uppercase
+          tracking-[0.15em]
+          opacity-0
+          transition-all
+          duration-300
+          group-hover:max-w-[80px]
+          group-hover:opacity-100
+        "
+      >
+        {label}
+      </span>
+    </Link>
+  ))}
+</div>
             </BlurFade>
           </div>
         </div>
       </section>
+
+      {/* About */}
       <section id="about">
         <div className="flex min-h-0 flex-col gap-y-4">
-          <BlurFade delay={BLUR_FADE_DELAY * 3}>
-            <h2 className="text-xl font-bold">About</h2>
+
+          <BlurFade delay={BLUR_FADE_DELAY * 5}>
+            <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              About
+            </h2>
           </BlurFade>
-          <BlurFade delay={BLUR_FADE_DELAY * 4}>
+
+          <BlurFade delay={BLUR_FADE_DELAY * 6}>
             <div className="prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
-              <Markdown>
-                {DATA.summary}
-              </Markdown>
+              <Markdown>{DATA.summary}</Markdown>
             </div>
           </BlurFade>
+
         </div>
       </section>
-      {/* <section id="work">
-        <div className="flex min-h-0 flex-col gap-y-6">
-          <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <h2 className="text-xl font-bold">Work Experience</h2>
-          </BlurFade>
-          <BlurFade delay={BLUR_FADE_DELAY * 6}>
-            <WorkSection />
-          </BlurFade>
-        </div>
-      </section> */}
+
+      {/* Education */}
       <section id="education">
         <div className="flex min-h-0 flex-col gap-y-6">
+
           <BlurFade delay={BLUR_FADE_DELAY * 7}>
-            <h2 className="text-xl font-bold">Education</h2>
+            <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              Education
+            </h2>
           </BlurFade>
+
           <div className="flex flex-col gap-8">
             {DATA.education.map((education, index) => (
               <BlurFade
@@ -153,29 +183,48 @@ export default function Page() {
                   href={education.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-x-3 justify-between group"
+                  className="group flex items-center justify-between gap-x-3"
                 >
-                  <div className="flex items-center gap-x-3 flex-1 min-w-0">
+                  <div className="flex min-w-0 flex-1 items-center gap-x-3">
+
                     {education.logoUrl ? (
                       <img
                         src={education.logoUrl}
                         alt={education.school}
-                        className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border overflow-hidden object-contain flex-none"
+                        className="size-8 flex-none rounded-full border p-1 object-contain"
                       />
                     ) : (
-                      <div className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border bg-muted flex-none" />
+                      <div className="size-8 flex-none rounded-full border bg-muted" />
                     )}
-                    <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-                      <div className="font-semibold leading-none flex items-center gap-2">
+
+                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+
+                      <div className="flex items-center gap-2 font-medium leading-none">
                         {education.school}
-                        <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" aria-hidden />
+
+                        <ArrowUpRight
+                          className="
+                            size-3.5
+                            text-muted-foreground
+                            opacity-0
+                            -translate-x-1
+                            transition-all
+                            duration-200
+                            group-hover:translate-x-0
+                            group-hover:opacity-100
+                          "
+                          aria-hidden
+                        />
                       </div>
+
                       <div className="font-sans text-sm text-muted-foreground">
                         {education.degree}
                       </div>
+
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 text-xs tabular-nums text-muted-foreground text-right flex-none">
+
+                  <div className="flex flex-none items-center gap-1 text-xs tabular-nums text-muted-foreground">
                     <span>
                       {education.start} - {education.end}
                     </span>
@@ -184,41 +233,58 @@ export default function Page() {
               </BlurFade>
             ))}
           </div>
+
         </div>
       </section>
+
+      {/* Skills */}
       <section id="skills">
         <div className="flex min-h-0 flex-col gap-y-4">
+
           <BlurFade delay={BLUR_FADE_DELAY * 9}>
-            <h2 className="text-xl font-bold">Skills</h2>
+            <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              Skills
+            </h2>
           </BlurFade>
+
           <div className="flex flex-wrap gap-2">
             {DATA.skills.map((skill, id) => (
-              <BlurFade key={skill.name} delay={BLUR_FADE_DELAY * 10 + id * 0.05}>
-                <div className="border bg-background border-border ring-2 ring-border/20 rounded-xl h-8 w-fit px-4 flex items-center gap-2">
-                  {skill.icon && <skill.icon className="size-4 rounded overflow-hidden object-contain" />}
-                  <span className="text-foreground text-sm font-medium">{skill.name}</span>
+              <BlurFade
+                key={skill.name}
+                delay={BLUR_FADE_DELAY * 10 + id * 0.05}
+              >
+                <div className="flex h-8 w-fit items-center gap-2 rounded-xl border border-border bg-background px-4">
+                  {skill.icon && (
+                    <skill.icon className="size-4 overflow-hidden rounded object-contain" />
+                  )}
+
+                  <span className="text-sm font-medium text-foreground">
+                    {skill.name}
+                  </span>
                 </div>
               </BlurFade>
             ))}
           </div>
+
         </div>
       </section>
+
+      {/* GitHub */}
       <section id="github">
         <BlurFade delay={BLUR_FADE_DELAY * 17}>
           <GitHubSection />
         </BlurFade>
       </section>
+
+      {/* Projects */}
       <section id="projects">
         <BlurFade delay={BLUR_FADE_DELAY * 11}>
           <ProjectsSection />
         </BlurFade>
       </section>
-      {/* <section id="hackathons">
-        <BlurFade delay={BLUR_FADE_DELAY * 13}>
-          <HackathonsSection />
-        </BlurFade>
-      </section> */}
-      <section id="contact" >
+
+      {/* Contact */}
+      <section id="contact">
         <BlurFade delay={BLUR_FADE_DELAY * 16}>
           <ContactSection />
         </BlurFade>

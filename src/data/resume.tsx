@@ -28,12 +28,9 @@ export const DATA = {
     { name: "Docker", icon: Docker },
     { name: "C++", icon: Csharp },
   ],
-  navbar: [
-    { href: "/", icon: HomeIcon, label: "Home" },
-    { href: "/blog", icon: NotebookIcon, label: "Blog" },
-  ],
+  navbar: [{ href: "/", icon: HomeIcon, label: "Home" }],
   contact: {
-    email: "hello@example.com",
+    email: "ashishinrewa@gmail.com",
     tel: "+123456789",
     social: {
       GitHub: {
@@ -55,7 +52,7 @@ export const DATA = {
         url: "https://x.com/1xashishtiwari",
         icon: Icons.x,
 
-        navbar: true,
+        navbar: false,
       },
       email: {
         name: "Send Email",
@@ -177,7 +174,7 @@ export const DATA = {
       links: [
         {
           type: "Website",
-          href: "https://checkinly.onrender.com",
+          href: "https://checkinly.ashishtiwari.dev",
           icon: <Icons.globe className="size-3" />,
         },
         {

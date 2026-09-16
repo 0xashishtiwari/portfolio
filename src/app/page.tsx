@@ -2,7 +2,6 @@
 "use client";
 
 import BlurFade from "@/components/magicui/blur-fade";
-import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
@@ -19,139 +18,71 @@ import {
   Linkedin,
 } from "lucide-react";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-import { Button } from "@/components/ui/button";
-
 const BLUR_FADE_DELAY = 0.04;
+
+const socialLinks = [
+  { label: "Resume", href: "/resume.pdf", icon: FileText },
+  { label: "GitHub", href: "https://github.com/0xashishtiwari", icon: Github },
+  { label: "LinkedIn", href: "https://linkedin.com/in/ashiishtiwarii", icon: Linkedin },
+  { label: "LeetCode", href: "https://leetcode.com/1xashishtiwari", icon: Code2 },
+];
 
 export default function Page() {
   return (
-    <main className="relative flex min-h-dvh flex-col gap-11">
-
-      {/* Hero */}
-      <section id="hero">
-        <div className="mx-auto w-full max-w-2xl">
-          <div className="flex flex-col gap-2 py-4">
-
+    <main className="relative flex min-h-dvh flex-col gap-14 pb-24 sm:gap-16">
+      <section id="hero" className="pt-2 sm:pt-6">
+        <div className="mx-auto w-full max-w-3xl">
+          <div className="flex flex-col gap-3 py-4 sm:gap-4 sm:py-6">
             <BlurFade delay={BLUR_FADE_DELAY}>
-              <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                Hello, I&apos;m
-              </p>
+              <p className="section-label mb-1">Hello, I&apos;m</p>
             </BlurFade>
 
             <BlurFade delay={BLUR_FADE_DELAY * 2} yOffset={6}>
               <h1
-                className="
-                  text-4xl
-                  font-medium
-                  leading-[1.08]
-                  tracking-[-0.045em]
-                  text-foreground
-                  sm:text-5xl
-                  
-                "
+                className="text-4xl font-medium leading-[0.96] text-foreground sm:text-5xl lg:text-6xl"
+                style={{
+                  fontFamily: '"Times New Roman", Georgia, serif',
+                  fontStyle: "normal",
+                  letterSpacing: "-0.04em",
+                }}
               >
-                Ashish. 
+                Ashish.
               </h1>
             </BlurFade>
 
             <BlurFade delay={BLUR_FADE_DELAY * 3} yOffset={6}>
-              <p className="mt-2 max-w-[580px] text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+              <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
                 {DATA.description}
               </p>
             </BlurFade>
 
             <BlurFade delay={BLUR_FADE_DELAY * 4}>
-              <div className="mt-5 flex items-center gap-2">
-  {[
-    {
-      label: "Resume",
-      href: "/resume.pdf",
-      icon: FileText,
-    },
-    {
-      label: "GitHub",
-      href: "https://github.com/0xashishtiwari",
-      icon: Github,
-    },
-    {
-      label: "LinkedIn",
-      href: "https://linkedin.com/in/ashiishtiwarii",
-      icon: Linkedin,
-    },
-    {
-      label: "LeetCode",
-      href: "https://leetcode.com/1xashishtiwari",
-      icon: Code2,
-    },
-  ].map(({ label, href, icon: Icon }) => (
-    <Link
-      key={label}
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="
-        group
-        flex
-        h-9
-        items-center
-        gap-2
-        overflow-hidden
-        rounded-full
-        border
-        border-border
-        bg-background/70
-        px-3
-        backdrop-blur-sm
-        transition-all
-        duration-300
-        hover:gap-2.5
-        hover:px-4
-        hover:bg-foreground
-        hover:text-background
-      "
-    >
-      <Icon className="size-3.5 shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              <div className="mt-5 flex flex-wrap items-center gap-2.5">
+                {socialLinks.map(({ label, href, icon: Icon }) => (
+                  <Link
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex h-10 items-center gap-2.5 overflow-hidden rounded-full border border-border/80 bg-background/70 px-3.5 text-foreground shadow-[0_14px_30px_-24px_rgba(15,23,42,0.55)] backdrop-blur-sm transition-all duration-300 hover:border-foreground/20 hover:bg-foreground hover:text-background"
+                  >
+                    <Icon className="size-3.5 shrink-0 transition-transform duration-300 group-hover:scale-110" />
 
-      <span
-        className="
-          max-w-0
-          overflow-hidden
-          whitespace-nowrap
-          font-mono
-          text-[10px]
-          uppercase
-          tracking-[0.15em]
-          opacity-0
-          transition-all
-          duration-300
-          group-hover:max-w-[80px]
-          group-hover:opacity-100
-        "
-      >
-        {label}
-      </span>
-    </Link>
-  ))}
-</div>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.15em] transition-opacity duration-300 sm:text-[10px]">
+                      {label}
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </BlurFade>
           </div>
         </div>
       </section>
 
-      {/* About */}
       <section id="about">
         <div className="flex min-h-0 flex-col gap-y-4">
-
           <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-              About
-            </h2>
+            <h2 className="section-label">About</h2>
           </BlurFade>
 
           <BlurFade delay={BLUR_FADE_DELAY * 6}>
@@ -159,21 +90,16 @@ export default function Page() {
               <Markdown>{DATA.summary}</Markdown>
             </div>
           </BlurFade>
-
         </div>
       </section>
 
-      {/* Education */}
       <section id="education">
         <div className="flex min-h-0 flex-col gap-y-6">
-
           <BlurFade delay={BLUR_FADE_DELAY * 7}>
-            <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-              Education
-            </h2>
+            <h2 className="section-label">Education</h2>
           </BlurFade>
 
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4 sm:gap-5">
             {DATA.education.map((education, index) => (
               <BlurFade
                 key={education.school}
@@ -183,113 +109,81 @@ export default function Page() {
                   href={education.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-between gap-x-3"
+                  className="group flex items-start justify-between gap-4 rounded-2xl border border-border/70 bg-card/40 p-3.5 transition-colors duration-200 hover:border-border hover:bg-card/80 sm:p-4"
                 >
-                  <div className="flex min-w-0 flex-1 items-center gap-x-3">
-
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
                     {education.logoUrl ? (
                       <img
                         src={education.logoUrl}
                         alt={education.school}
-                        className="size-8 flex-none rounded-full border p-1 object-contain"
+                        className="size-9 flex-none rounded-full border border-border bg-white/80 p-1.5 object-contain"
                       />
                     ) : (
-                      <div className="size-8 flex-none rounded-full border bg-muted" />
+                      <div className="size-9 flex-none rounded-full border border-border bg-muted" />
                     )}
 
-                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-
-                      <div className="flex items-center gap-2 font-medium leading-none">
+                    <div className="flex min-w-0 flex-1 flex-col gap-1">
+                      <div className="flex items-center gap-2 text-sm font-medium leading-tight text-foreground sm:text-base">
                         {education.school}
 
                         <ArrowUpRight
-                          className="
-                            size-3.5
-                            text-muted-foreground
-                            opacity-0
-                            -translate-x-1
-                            transition-all
-                            duration-200
-                            group-hover:translate-x-0
-                            group-hover:opacity-100
-                          "
+                          className="size-3.5 text-muted-foreground opacity-0 -translate-x-1 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
                           aria-hidden
                         />
                       </div>
 
-                      <div className="font-sans text-sm text-muted-foreground">
+                      <div className="text-sm text-muted-foreground">
                         {education.degree}
                       </div>
-
                     </div>
                   </div>
 
-                  <div className="flex flex-none items-center gap-1 text-xs tabular-nums text-muted-foreground">
-                    <span>
-                      {education.start} - {education.end}
-                    </span>
+                  <div className="flex flex-none items-center pt-1 text-right text-[11px] tabular-nums text-muted-foreground/80 sm:text-xs">
+                    {education.start} - {education.end}
                   </div>
                 </Link>
               </BlurFade>
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* Skills */}
       <section id="skills">
         <div className="flex min-h-0 flex-col gap-y-4">
-
           <BlurFade delay={BLUR_FADE_DELAY * 9}>
-            <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-              Skills
-            </h2>
+            <h2 className="section-label">Skills</h2>
           </BlurFade>
 
           <div className="flex flex-wrap gap-2">
             {DATA.skills.map((skill, id) => (
-              <BlurFade
-                key={skill.name}
-                delay={BLUR_FADE_DELAY * 10 + id * 0.05}
-              >
-                <div className="flex h-8 w-fit items-center gap-2 rounded-xl border border-border bg-background px-4">
-                  {skill.icon && (
-                    <skill.icon className="size-4 overflow-hidden rounded object-contain" />
-                  )}
-
-                  <span className="text-sm font-medium text-foreground">
-                    {skill.name}
-                  </span>
+              <BlurFade key={skill.name} delay={BLUR_FADE_DELAY * 10 + id * 0.05}>
+                <div className="flex h-9 w-fit items-center gap-2 rounded-full border border-border/80 bg-background/70 px-3.5 shadow-[0_12px_25px_-22px_rgba(15,23,42,0.65)]">
+                  {skill.icon && <skill.icon className="size-4 overflow-hidden rounded object-contain" />}
+                  <span className="text-sm font-medium text-foreground">{skill.name}</span>
                 </div>
               </BlurFade>
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* GitHub */}
       <section id="github">
         <BlurFade delay={BLUR_FADE_DELAY * 17}>
           <GitHubSection />
         </BlurFade>
       </section>
 
-      {/* Projects */}
       <section id="projects">
         <BlurFade delay={BLUR_FADE_DELAY * 11}>
           <ProjectsSection />
         </BlurFade>
       </section>
 
-      {/* Contact */}
       <section id="contact">
         <BlurFade delay={BLUR_FADE_DELAY * 16}>
           <ContactSection />
         </BlurFade>
       </section>
-
     </main>
   );
 }

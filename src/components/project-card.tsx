@@ -57,7 +57,7 @@ export function ProjectCard({
   return (
     <article
       className={cn(
-        "group flex h-full flex-col overflow-hidden rounded-xl border border-border/70 bg-card/40 transition-all duration-300 hover:border-border hover:bg-card/70",
+        "group flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card/50 transition-all duration-300 hover:border-border hover:bg-card/80 hover:shadow-[0_25px_40px_-30px_rgba(15,23,42,0.38)]",
         className
       )}
     >
@@ -125,7 +125,7 @@ export function ProjectCard({
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 flex-col px-5 py-5 sm:px-6 sm:py-6">
+      <div className="flex flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6">
         {/* Title + date */}
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">

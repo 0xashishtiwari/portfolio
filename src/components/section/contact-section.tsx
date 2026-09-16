@@ -20,8 +20,8 @@ export default function ContactSection() {
   }, []);
 
   return (
-    <section className="relative pt-8 pb-20">
-      <div className="relative w-full overflow-hidden rounded-xl border bg-background px-6 py-12 sm:px-10 sm:py-14">
+    <section className="relative pt-8 pb-8 sm:pb-10">
+      <div className="relative w-full overflow-hidden rounded-2xl border border-border/70 bg-background/80 px-4 py-10 shadow-[0_16px_44px_-28px_rgba(15,23,42,0.35)] sm:px-10 sm:py-12">
         {/* Background */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-44 overflow-hidden opacity-40">
           <FlickeringGrid
@@ -45,7 +45,7 @@ export default function ContactSection() {
           </span>
 
           {/* Heading */}
-          <h2 className="text-[3.25rem] font-semibold leading-[0.95] tracking-[-0.05em] sm:text-6xl">
+          <h2 className="text-4xl font-semibold leading-[0.95] tracking-[-0.05em] sm:text-6xl">
             <span
               className="font-normal italic"
               style={{

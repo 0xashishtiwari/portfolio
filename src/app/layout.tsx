@@ -80,7 +80,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased relative",
+          "relative flex min-h-screen flex-col bg-background font-sans antialiased",
           geist.variable,
           geistMono.variable,
           instrumentSerif.variable
@@ -108,13 +108,13 @@ export default function RootLayout({
             </div>
 
             {/* Main content */}
-            <div className="relative z-10 mx-auto max-w-3xl px-4 py-10 pb-16 sm:px-6 sm:py-24">
+            <div className="relative z-10 mx-auto flex w-full flex-1 flex-col max-w-3xl px-4 py-10 pb-16 sm:px-6 sm:py-24">
               <div className="relative border-x border-border/60 px-3 sm:px-8">
                 {children}
               </div>
             </div>
 
-            <footer className="relative z-10 mx-auto max-w-3xl px-4 pb-20 sm:px-6">
+            <footer className="relative z-10 mx-auto max-w-3xl px-4 pb-28 sm:px-6">
               <div className="flex flex-col items-center justify-between gap-3 border-t border-border/70 pt-5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:flex-row">
                 <p>© {new Date().getFullYear()} Ashish Tiwari</p>
 

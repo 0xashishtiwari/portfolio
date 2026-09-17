@@ -168,6 +168,15 @@
     text-rendering: optimizeLegibility;
   }
 
+  .react-activity-calendar__scroll-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .react-activity-calendar__scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+
   ::selection {
     background: rgba(148, 163, 184, 0.28);
     color: var(--foreground);

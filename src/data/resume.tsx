@@ -7,6 +7,7 @@ import { Nodejs } from "@/components/ui/svgs/nodejs";
 import { Postgresql } from "@/components/ui/svgs/postgresql";
 import { Docker } from "@/components/ui/svgs/docker";
 import { Csharp } from "@/components/ui/svgs/csharp";
+import { Javascript } from "@/components/ui/svgs/javascript";
 
 export const DATA = {
   name: "Ashish Tiwari",
@@ -27,6 +28,7 @@ export const DATA = {
     { name: "Postgres", icon: Postgresql },
     { name: "Docker", icon: Docker },
     { name: "C++", icon: Csharp },
+    { name: "JavaScript", icon: Javascript },
   ],
   navbar: [{ href: "/", icon: HomeIcon, label: "Home" }],
   contact: {

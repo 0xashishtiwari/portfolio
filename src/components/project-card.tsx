@@ -2,7 +2,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import Markdown from "react-markdown";
@@ -31,6 +30,7 @@ interface Props {
   href?: string;
   description: string;
   dates: string;
+  active?: boolean;
   tags: readonly string[];
   link?: string;
   image?: string;
@@ -48,6 +48,7 @@ export function ProjectCard({
   href,
   description,
   dates,
+  active = false,
   tags,
   image,
   video,
@@ -133,12 +134,15 @@ export function ProjectCard({
               <h3 className="truncate text-[16px] font-medium tracking-[-0.01em] text-foreground">
                 {title}
               </h3>
-
-              {href && (
-                <ArrowUpRight
-                  className="size-3.5 shrink-0 text-muted-foreground/60 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
-                  aria-hidden
-                />
+              {active && (
+                <span
+                  className="relative flex size-2.5 shrink-0 items-center justify-center"
+                  aria-label="Live project"
+                  title="Live project"
+                >
+                  <span className="absolute size-2.5 animate-ping rounded-full bg-emerald-400/70" />
+                  <span className="relative size-1.5 rounded-full bg-emerald-500" />
+                </span>
               )}
             </div>
 

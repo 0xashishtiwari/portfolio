@@ -1,8 +1,17 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { withContentCollections } from "@content-collections/next";
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
+  turbopack: {
+    root: projectRoot,
+  },
+
   async headers() {
     return [
       {
@@ -30,5 +39,4 @@ const nextConfig = {
   },
 };
 
-// withContentCollections must be the outermost plugin
 export default withContentCollections(nextConfig);

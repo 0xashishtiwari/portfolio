@@ -1,0 +1,700 @@
+---
+title: "Building My Own Personalized Windows Terminal"
+publishedAt: "2026-09-24"
+updatedAt: "2026-09-24"
+author: "Ashish Tiwari"
+summary: "How I customized Windows Terminal and PowerShell into a personalized development environment with a custom prompt, file search, API testing, network monitoring, and port management."
+image: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=800&h=192&fit=crop"
+---
+
+# Building My Own Personalized Windows Terminal
+
+I use the terminal almost every day.
+
+Whether I'm working on a Next.js application, running backend services, testing APIs, checking ports, or managing local development environments, a lot of my development workflow happens inside the terminal.
+
+The default PowerShell experience works perfectly fine, but I wanted something more personal.
+
+Instead of installing a separate tool for every small task, I started customizing my PowerShell profile and turning the terminal into a small development environment of my own.
+
+The result is a **personalized Windows Terminal setup** with custom commands, a cleaner prompt, file search, API testing, network monitoring, and port management.
+
+## The Goal
+
+I wanted my terminal to be:
+
+* Minimal
+* Clean
+* Developer-focused
+* Fast to use
+* Easy to customize
+* Built around my own workflow
+
+The idea wasn't to build a complicated terminal configuration.
+
+It was simply to remove small pieces of friction from the things I do every day.
+
+My setup currently includes:
+
+* **Terminal Icons**
+* **Custom startup greeting**
+* **Minimal prompt**
+* **File search**
+* **Folder search**
+* **Network monitoring**
+* **API testing**
+* **Port management**
+* **Process management**
+
+## Windows Terminal Setup
+
+The foundation of the setup is **Windows Terminal with PowerShell**.
+
+I customized the terminal appearance using:
+
+* JetBrains Mono
+* Custom colors
+* Acrylic transparency
+* Custom padding
+* Minimal cursor
+* Custom PowerShell profile
+
+For the font, I use **JetBrains Mono** because it is designed specifically for programming and makes code and terminal output easier to read.
+
+My terminal configuration is maintained separately from my PowerShell profile so that the visual configuration and shell functionality can evolve independently.
+
+## Installing Terminal Icons
+
+PowerShell's default directory listing is useful, but I wanted files and folders to be easier to identify visually.
+
+For that, I use **Terminal-Icons**.
+
+Install it with:
+
+```powershell
+Install-Module -Name Terminal-Icons -Repository PSGallery
+````
+
+Then import it:
+
+```powershell
+Import-Module Terminal-Icons
+```
+
+After that, files and directories can display useful icons directly in the terminal.
+
+## Creating a Personalized Startup
+
+One of the first things I customized was the PowerShell startup experience.
+
+Instead of displaying a large banner, I wanted something small and personal.
+
+Every time I open a new terminal, it displays:
+
+```text
+  Ashish
+  ------
+
+  make it work.
+  make it clean.
+  make it yours.
+
+  "keep building."
+```
+
+I also added a collection of short quotes and randomly select one whenever a new PowerShell session starts.
+
+```powershell
+$quotes = @(
+    "begin again.",
+    "keep going.",
+    "make something.",
+    "trust the process.",
+    "one step at a time.",
+    "stay curious.",
+    "keep building.",
+    "do it anyway.",
+    "progress over perfection.",
+    "let it take time.",
+    "enjoy the process.",
+    "keep showing up.",
+    "start where you are.",
+    "make today count.",
+    "you've got this."
+)
+
+$quote = Get-Random -InputObject $quotes
+```
+
+It is a small feature, but it makes the terminal feel like my own environment.
+
+## A Cleaner Prompt
+
+The default PowerShell prompt can become quite long:
+
+```text
+PS C:\Users\acer\Documents\Projects\Relay>
+```
+
+I wanted something simpler:
+
+```text
+~/Documents/Projects/Relay >
+```
+
+I created a helper function that converts Windows paths into a cleaner format.
+
+```powershell
+function Get-PrettyPath {
+
+    $current = (Get-Location).Path
+
+    if ($current -eq $HOME) {
+        return "~"
+    }
+
+    if ($current.StartsWith($HOME + "\")) {
+
+        $relative = $current.Substring($HOME.Length)
+
+        return "~" + $relative.Replace("\", "/")
+    }
+
+    if ($current -match '^[A-Za-z]:\\?$') {
+
+        return $current.Substring(0, 2)
+    }
+
+    return $current.Replace("\", "/")
+}
+```
+
+Then I use it in my custom prompt:
+
+```powershell
+function prompt {
+
+    $path = Get-PrettyPath
+
+    return "$path > "
+}
+```
+
+Now the prompt stays minimal:
+
+```text
+~ >
+```
+
+or:
+
+```text
+~/Projects/Relay >
+```
+
+## File Search
+
+I frequently need to find files inside development projects.
+
+Instead of navigating through folders manually, I created a simple `findfile` command.
+
+For example:
+
+```powershell
+findfile package.json
+```
+
+or:
+
+```powershell
+findfile resume
+```
+
+The implementation is:
+
+```powershell
+function findfile {
+
+    param(
+        [string]$name
+    )
+
+    if ([string]::IsNullOrWhiteSpace($name)) {
+        Write-Host "Usage: findfile <filename>" -ForegroundColor DarkGray
+        return
+    }
+
+    Get-ChildItem `
+        -Path . `
+        -Recurse `
+        -File `
+        -Filter "*$name*" `
+        -ErrorAction SilentlyContinue |
+        Select-Object -ExpandProperty FullName
+}
+```
+
+It searches recursively from the current directory.
+
+## Folder Search
+
+I created a similar command for searching directories.
+
+```powershell
+fd relay
+```
+
+or:
+
+```powershell
+fd projects
+```
+
+The function searches recursively for matching folders:
+
+```powershell
+function fd {
+
+    param(
+        [string]$name
+    )
+
+    if ([string]::IsNullOrWhiteSpace($name)) {
+        Write-Host "Usage: fd <foldername>" -ForegroundColor DarkGray
+        return
+    }
+
+    Get-ChildItem `
+        -Path . `
+        -Recurse `
+        -Directory `
+        -Filter "*$name*" `
+        -ErrorAction SilentlyContinue |
+        Select-Object -ExpandProperty FullName
+}
+```
+
+## Cleaner Directory Listing
+
+I also customized `ls` and `ll` so that I can use Terminal Icons while keeping the directory listing focused on the things I actually care about.
+
+```powershell
+function ls {
+
+    Get-ChildItem |
+        Sort-Object @{Expression = { -not $_.PSIsContainer }}, Name |
+        ForEach-Object {
+            Format-TerminalIcons $_
+        }
+}
+
+function ll {
+
+    Get-ChildItem |
+        Sort-Object @{Expression = { -not $_.PSIsContainer }}, Name |
+        ForEach-Object {
+            Format-TerminalIcons $_
+        }
+}
+```
+
+This gives the directory listing a much cleaner developer-oriented feel.
+
+## Network Monitoring
+
+Another small utility I wanted was a quick way to see my current network activity.
+
+Instead of opening another application, I created:
+
+```powershell
+netload
+```
+
+It continuously displays the current download and upload rate.
+
+The output looks like:
+
+```text
+  Network
+  -------
+
+  Adapter   Wi-Fi
+  Download  12.42 Mbps
+  Upload    1.83 Mbps
+
+  Press Ctrl+C to exit.
+```
+
+The implementation uses Windows network adapter statistics:
+
+```powershell
+function netload {
+
+    $adapter = Get-NetAdapter |
+        Where-Object {
+            $_.Status -eq "Up" -and
+            $_.HardwareInterface -eq $true
+        } |
+        Select-Object -First 1
+
+    if (-not $adapter) {
+        Write-Host "No active network adapter found." -ForegroundColor Red
+        return
+    }
+
+    $previous = Get-NetAdapterStatistics -Name $adapter.Name
+
+    while ($true) {
+
+        Start-Sleep -Seconds 1
+
+        $current = Get-NetAdapterStatistics -Name $adapter.Name
+
+        $download = (
+            ($current.ReceivedBytes - $previous.ReceivedBytes) * 8 / 1MB
+        )
+
+        $upload = (
+            ($current.SentBytes - $previous.SentBytes) * 8 / 1MB
+        )
+
+        Clear-Host
+
+        Write-Host ""
+        Write-Host "  Network" -ForegroundColor White
+        Write-Host "  -------" -ForegroundColor DarkGray
+        Write-Host ""
+        Write-Host "  Adapter   $($adapter.Name)" -ForegroundColor DarkGray
+        Write-Host "  Download  $([math]::Round($download, 2)) Mbps" -ForegroundColor Green
+        Write-Host "  Upload    $([math]::Round($upload, 2)) Mbps" -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host "  Press Ctrl+C to exit." -ForegroundColor DarkGray
+
+        $previous = $current
+    }
+}
+```
+
+Press `Ctrl + C` to stop the monitor.
+
+## Testing APIs From the Terminal
+
+While developing backend services, I often need to make quick HTTP requests.
+
+For simple checks, I don't always need a dedicated API client.
+
+I wanted to be able to do this directly from PowerShell:
+
+```powershell
+api GET localhost:4000/health
+```
+
+or:
+
+```powershell
+api GET http://localhost:4000/health
+```
+
+The function also supports request bodies:
+
+```powershell
+api POST localhost:4000/auth/login '{"email":"test@example.com"}'
+```
+
+It supports:
+
+* GET
+* POST
+* PUT
+* PATCH
+* DELETE
+* HEAD
+
+The basic implementation is:
+
+```powershell
+function api {
+
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD")]
+        [string]$method,
+
+        [Parameter(Mandatory = $true)]
+        [string]$url,
+
+        [string]$body
+    )
+
+    if ($url -notmatch '^https?://') {
+        $url = "http://$url"
+    }
+
+    $params = @{
+        Method      = $method.ToUpper()
+        Uri         = $url
+        ContentType = "application/json"
+    }
+
+    if ($body) {
+        $params.Body = $body
+    }
+
+    $start = Get-Date
+
+    try {
+
+        $response = Invoke-RestMethod @params
+
+        $elapsed = ((Get-Date) - $start).TotalMilliseconds
+
+        Write-Host ""
+        Write-Host "  $method $url" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  Status   200 OK" -ForegroundColor Green
+        Write-Host "  Time     $([math]::Round($elapsed, 0)) ms" -ForegroundColor DarkGray
+        Write-Host ""
+
+        if ($null -ne $response) {
+            $response | ConvertTo-Json -Depth 20
+        }
+
+        Write-Host ""
+    }
+    catch {
+
+        $elapsed = ((Get-Date) - $start).TotalMilliseconds
+
+        Write-Host ""
+        Write-Host "  $method $url" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  Request failed" -ForegroundColor Red
+        Write-Host "  Time     $([math]::Round($elapsed, 0)) ms" -ForegroundColor DarkGray
+        Write-Host ""
+        Write-Host "  $($_.Exception.Message)" -ForegroundColor DarkGray
+        Write-Host ""
+    }
+}
+```
+
+This is designed for quick development checks rather than replacing a full API testing platform.
+
+## Port Management
+
+When working with multiple services locally, ports can become difficult to keep track of.
+
+For example, a project might have:
+
+```text
+Next.js
+Gateway
+Auth service
+Chat service
+Agent service
+Redis
+PostgreSQL
+```
+
+Instead of checking ports manually, I created a `ports` command.
+
+```powershell
+ports
+```
+
+It displays all listening TCP ports along with their processes and PIDs.
+
+For example:
+
+```text
+Port  Address   Process   PID
+----  -------   -------   ---
+3000  0.0.0.0   node      18420
+4000  0.0.0.0   node      22140
+6379  0.0.0.0   redis     15432
+```
+
+The implementation uses `Get-NetTCPConnection`:
+
+```powershell
+function ports {
+
+    Get-NetTCPConnection `
+        -State Listen `
+        -ErrorAction SilentlyContinue |
+        Sort-Object LocalPort |
+        ForEach-Object {
+
+            $process = Get-Process `
+                -Id $_.OwningProcess `
+                -ErrorAction SilentlyContinue
+
+            [PSCustomObject]@{
+                Port    = $_.LocalPort
+                Address = $_.LocalAddress
+                Process = if ($process) {
+                    $process.ProcessName
+                } else {
+                    "Unknown"
+                }
+                PID     = $_.OwningProcess
+            }
+        } |
+        Format-Table -AutoSize
+}
+```
+
+### Checking a Specific Port
+
+If I only want to inspect one port:
+
+```powershell
+port 3000
+```
+
+This shows the process, PID, state, address, and port.
+
+### Killing a Process Using a Port
+
+When a development server doesn't shut down correctly, I can use:
+
+```powershell
+killport 3000
+```
+
+The function finds the process using that port and terminates it.
+
+```powershell
+function killport {
+
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$port
+    )
+
+    $connections = Get-NetTCPConnection `
+        -LocalPort $port `
+        -ErrorAction SilentlyContinue
+
+    if (-not $connections) {
+
+        Write-Host ""
+        Write-Host "  No process is using port $port" -ForegroundColor DarkGray
+        Write-Host ""
+
+        return
+    }
+
+    $pids = $connections |
+        Select-Object -ExpandProperty OwningProcess -Unique
+
+    foreach ($processId in $pids) {
+
+        $process = Get-Process `
+            -Id $processId `
+            -ErrorAction SilentlyContinue
+
+        if ($process) {
+
+            Write-Host ""
+            Write-Host "  Killing $($process.ProcessName) (PID $processId) on port $port" `
+                -ForegroundColor Red
+
+            Stop-Process -Id $processId -Force
+        }
+    }
+
+    Write-Host ""
+    Write-Host "  Port $port is now free." -ForegroundColor Green
+    Write-Host ""
+}
+```
+
+## My Complete PowerShell Profile
+
+All of these utilities live inside my PowerShell profile:
+
+```text
+$PROFILE
+```
+
+You can open it with:
+
+```powershell
+notepad $PROFILE
+```
+
+And reload it after making changes:
+
+```powershell
+. $PROFILE
+```
+
+The complete configuration contains:
+
+* Personalized startup
+* Custom prompt
+* Terminal Icons
+* File search
+* Folder search
+* Network monitoring
+* API testing
+* Port management
+
+## Why I Built This
+
+None of these commands are particularly complex.
+
+That's actually the point.
+
+I didn't want to build a huge framework around my terminal.
+
+I wanted to solve small problems that repeatedly appeared in my development workflow.
+
+Instead of:
+
+> "Which application should I open for this?"
+
+I can often just type:
+
+```text
+findfile
+fd
+netload
+api
+ports
+port
+killport
+```
+
+and keep working.
+
+## What's Next?
+
+This setup is still evolving.
+
+Some of the things I want to add next are:
+
+* Git-aware prompt
+* Project shortcuts
+* Docker status
+* System information
+* Process monitoring
+* Better API response formatting
+* Safer port termination
+* Development service shortcuts
+
+The idea is to keep the terminal lightweight while adding functionality only when it actually improves my workflow.
+
+## Conclusion
+
+This project started as a simple attempt to make my terminal more comfortable to use.
+
+It turned into something more useful: a personalized development environment built around the way I work.
+
+The biggest lesson for me was that personalization doesn't always require a new tool.
+
+Sometimes, a few small scripts can remove a surprising amount of friction.
+
+<mark>Your development environment should adapt to your workflow, not the other way around.</mark>
+
+And this terminal is still evolving.

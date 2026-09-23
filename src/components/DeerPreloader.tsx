@@ -13,7 +13,7 @@ interface IntroLoaderProps {
 const DEER_GIF = "/deer-loader.gif";
 
 export default function IntroLoader({
-  duration = 3200,
+  duration = 1600,
   onComplete,
 }: IntroLoaderProps) {
   const [progress, setProgress] = useState(0);

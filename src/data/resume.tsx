@@ -96,6 +96,24 @@ export const DATA = {
   ],
   projects: [
     {
+      title: "Relay",
+      href: "https://github.com/0xashishtiwari/relay",
+      dates: "Building",
+      active: true,
+      description:
+        "A multi-agent AI workspace that brings chat, coding, search, image generation, and document creation into one interface.",
+      technologies: ["TypeScript", "Next.js", "Node.js", "Redis", "LangChain"],
+      links: [
+        {
+          type: "GitHub",
+          href: "https://github.com/0xashishtiwari/relay",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
+    },
+    {
       title: "ContractIQ",
       href: "https://github.com/0xashishtiwari/contractiq",
       dates: "May 2026 - June 2026",

@@ -184,7 +184,7 @@ export default function ContactSection() {
         transition={{ duration: MOTION.duration.slow, ease: MOTION.ease.out }}
         className="pt-6 sm:pt-7"
       >
-        <div className="relative flex flex-col items-center overflow-hidden rounded-[14px] border border-border/50 bg-[oklch(98.6%_0.003_240)] px-6 py-7 text-center shadow-[0_8px_32px_-20px_rgba(15,23,42,0.06)] dark:border-white/[0.07] dark:bg-[oklch(0.205_0_0)] dark:shadow-none sm:px-8 sm:py-8">
+        <div className="relative flex flex-col items-center overflow-hidden rounded-[14px] border border-[#D8D4CC] bg-[#EFEBE3] px-6 py-7 text-center shadow-[0_8px_32px_-20px_rgba(23,23,23,0.06)] dark:border-[#33312D] dark:bg-[#232323] dark:shadow-none sm:px-8 sm:py-8">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.04] dark:opacity-[0.03]"

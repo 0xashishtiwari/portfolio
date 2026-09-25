@@ -9,7 +9,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-instrument: var(--font-display);
+  --font-display: var(--font-display);
+  --font-instrument: var(--font-instrument);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 

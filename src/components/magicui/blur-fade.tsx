@@ -1,7 +1,8 @@
 "use client";
 
-import { AnimatePresence, motion, useInView, Variants } from "motion/react";
+import { AnimatePresence, motion, useInView, Variants, useReducedMotion } from "motion/react";
 import { useRef } from "react";
+import { MOTION } from "@/lib/motion";
 
 interface BlurFadeProps {
   children: React.ReactNode;
@@ -21,23 +22,31 @@ const BlurFade = ({
   children,
   className,
   variant,
-  duration = 0.4,
+  duration = MOTION.duration.slow,
   delay = 0,
-  yOffset = 6,
+  yOffset = 8,
   inView = false,
-  inViewMargin = "-50px",
-  blur = "6px",
+  inViewMargin = "-40px",
+  blur = "4px",
 }: BlurFadeProps) => {
   const ref = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
   const inViewResult = useInView(ref, {
     once: true,
-    ...(inViewMargin ? { margin: inViewMargin as any } : {})
+    ...(inViewMargin ? { margin: inViewMargin as any } : {}),
   });
   const isInView = !inView || inViewResult;
-  const defaultVariants: Variants = {
-    hidden: { y: -yOffset, opacity: 0, filter: `blur(${blur})` },
-    visible: { y: 0, opacity: 1, filter: `blur(0px)` },
-  };
+
+  // Respect reduced motion — no translate/blur, only opacity
+  const defaultVariants: Variants = shouldReduceMotion
+    ? {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 },
+      }
+    : {
+        hidden: { y: yOffset, opacity: 0, filter: `blur(${blur})` },
+        visible: { y: 0, opacity: 1, filter: `blur(0px)` },
+      };
   const combinedVariants = variant || defaultVariants;
   return (
     <AnimatePresence>
@@ -48,8 +57,8 @@ const BlurFade = ({
         exit="hidden"
         variants={combinedVariants}
         transition={{
-          delay: 0.04 + delay,
-          duration,
+          delay: shouldReduceMotion ? 0 : 0.04 + delay,
+          duration: shouldReduceMotion ? MOTION.duration.fast : duration,
           ease: "easeOut",
         }}
         className={className}

@@ -123,7 +123,7 @@ export default async function Blog({
         }}
       />
       <div className="flex justify-start gap-4 items-center">
-        <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors border border-border rounded-lg px-2 py-1 inline-flex items-center gap-1 mb-6 group" aria-label="Back to Blog">
+        <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors border border-border rounded-lg px-2 py-1 inline-flex items-center gap-1 mb-4 group" aria-label="Back to Blog">
           <ChevronLeft className="size-3 group-hover:-translate-x-px transition-transform" />
           Back to Blog
         </Link>
@@ -136,7 +136,7 @@ export default async function Blog({
           {formatDate(post.publishedAt)}
         </p>
       </div>
-      <div className="my-6 flex w-full items-center">
+      <div className="my-4 flex w-full items-center">
         <div
           className="flex-1 h-px bg-border"
           style={{
@@ -151,7 +151,7 @@ export default async function Blog({
         <MDXContent code={post.mdx} components={mdxComponents} />
       </article>
 
-      <nav className="mt-12 pt-8 max-w-2xl">
+      <nav className="mt-8 pt-6 max-w-2xl">
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           {previousPost ? (
             <Link

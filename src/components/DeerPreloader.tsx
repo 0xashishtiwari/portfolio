@@ -65,7 +65,7 @@ export default function IntroLoader({
             items-center
             justify-center
             overflow-hidden
-            bg-[#f3f3f1]
+            bg-[#f3f3f1] dark:bg-[#07080a]
             px-6
           "
           initial={{ y: 0 }}
@@ -78,7 +78,7 @@ export default function IntroLoader({
           }}
         >
           {/* Flickering background */}
-          <div className="pointer-events-none absolute inset-0 opacity-[0.45]">
+          <div className="pointer-events-none absolute inset-0 opacity-[0.45] dark:opacity-[0.22]">
             <FlickeringGrid
               className="h-full w-full"
               squareSize={3}
@@ -98,9 +98,9 @@ export default function IntroLoader({
                 overflow-hidden
                 rounded-2xl
                 border
-                border-black/[0.08]
-                bg-black
-                shadow-[0_20px_70px_-25px_rgba(0,0,0,0.25)]
+                border-black/[0.08] dark:border-white/[0.08]
+                bg-black dark:bg-zinc-900
+                shadow-[0_20px_70px_-25px_rgba(0,0,0,0.25)] dark:shadow-[0_20px_70px_-25px_rgba(0,0,0,0.6)]
               "
               initial={{
                 opacity: 0,

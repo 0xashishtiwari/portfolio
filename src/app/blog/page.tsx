@@ -47,16 +47,27 @@ export default async function BlogPage({
   return (
     <section id="blog">
       <BlurFade delay={BLUR_FADE_DELAY}>
-        <h1 className="text-2xl font-semibold tracking-tight mb-2">Blog <span className="ml-1 bg-card border border-border rounded-md px-2 py-1 text-muted-foreground text-sm">{sortedPosts.length} posts</span></h1>
-        <p className="text-sm text-muted-foreground mb-8">
-          My thoughts on software development, life, and more.
-        </p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight mb-2">Blog <span className="ml-1 bg-card border border-border rounded-md px-2 py-1 text-muted-foreground text-sm">{sortedPosts.length} posts</span></h1>
+            <p className="text-sm text-muted-foreground mb-5">
+              My thoughts on software development, life, and more.
+            </p>
+          </div>
+          <Link
+            href="/rss.xml"
+            target="_blank"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground"
+          >
+            RSS
+          </Link>
+        </div>
       </BlurFade>
 
       {paginatedPosts.length > 0 ? (
         <>
           <BlurFade delay={BLUR_FADE_DELAY * 2}>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-4">
               {paginatedPosts.map((post, id) => {
                 const slug = post._meta.path.replace(/\.mdx$/, "");
                 const indexNumber = (pagination.page - 1) * PAGE_SIZE + id + 1;
@@ -93,7 +104,7 @@ export default async function BlogPage({
           {/* Pagination Controls */}
           {pagination.totalPages > 1 && (
             <BlurFade delay={BLUR_FADE_DELAY * 4}>
-              <div className="flex gap-3 flex-row items-center justify-between mt-8">
+              <div className="flex gap-3 flex-row items-center justify-between mt-6">
                 <div className="text-sm text-muted-foreground">
                   Page {pagination.page} of {pagination.totalPages}
                 </div>

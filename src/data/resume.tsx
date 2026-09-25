@@ -16,9 +16,9 @@ export const DATA = {
   location: "Bhopal, India",
   locationLink: "https://www.google.com/maps/place/bhopal",
   description:
-    "Building software, exploring new technologies, and occasionally breaking production on a VPS.",
+    "Building software, exploring AI, and learning something new every day.",
   summary:
-    "I like building things on the internet. Recently, I've been working on AI-powered applications, workflow automation systems, and full-stack products while exploring backend engineering and cloud technologies. Most of what I know comes from building projects, breaking them, and learning how to make them better.",
+    "I’m a software engineer who enjoys turning ideas into reliable products. My work spans full-stack development, backend systems, and AI-powered applications, with a growing interest in distributed systems and developer infrastructure. I learn best by building from scratch, solving problems as they appear, and continuously refining what I ship.",
   avatarUrl: "/me.jpeg",
   skills: [
     { name: "React", icon: ReactLight },
@@ -30,7 +30,10 @@ export const DATA = {
     { name: "C++", icon: Csharp },
     { name: "JavaScript", icon: Javascript },
   ],
-  navbar: [{ href: "/", icon: HomeIcon, label: "Home" }],
+  navbar: [
+    { href: "/", icon: HomeIcon, label: "Home" },
+    { href: "/blog", icon: NotebookIcon, label: "Blog" },
+  ],
   contact: {
     email: "ashishinrewa@gmail.com",
     tel: "+123456789",

@@ -25,21 +25,21 @@ const socialLinks = [
 
 export default function Page() {
   return (
-    <main className="relative flex min-h-dvh flex-col gap-10 pb-10 sm:gap-12">
-      {/* Hero — one of the few noticeable motion moments */}
-      <section id="hero" className="pt-0 sm:pt-2">
+    <main className="relative flex min-h-dvh flex-col gap-12 pb-10 sm:gap-16">
+      {/* Hero — airy, editorial */}
+      <section id="hero" className="pt-2 sm:pt-4">
         <div className="mx-auto w-full max-w-3xl">
-          <div className="flex flex-col gap-2.5 py-3 sm:py-4">
+          <div className="flex flex-col gap-4 py-4 sm:py-6">
             <BlurFade delay={0} yOffset={8} duration={MOTION.duration.slow} blur="4px">
               <p className="section-label mb-1">Hello, I&apos;m</p>
             </BlurFade>
 
             <BlurFade delay={0.06} yOffset={8} duration={MOTION.duration.slow}>
               <h1
-                className="text-4xl font-normal leading-[0.9] tracking-[-0.045em] text-foreground sm:text-5xl lg:text-6xl"
+                className="text-4xl font-normal leading-[0.92] tracking-[-0.032em] text-foreground sm:text-5xl lg:text-[3.75rem] lg:leading-[0.92]"
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontWeight: 380,
+                  fontWeight: 500,
                 }}
               >
                 Ashish
@@ -50,7 +50,7 @@ export default function Page() {
             </BlurFade>
 
             <BlurFade delay={0.12} yOffset={6} duration={MOTION.duration.normal}>
-              <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+              <p className="max-w-[36rem] text-[17px] font-normal leading-[1.85] tracking-[-0.012em] text-muted-foreground sm:text-[18px] sm:leading-[1.85]">
                 {DATA.description}
               </p>
             </BlurFade>
@@ -80,12 +80,12 @@ export default function Page() {
         </div>
       </section>
 
-      {/* About — static after single reveal */}
+      {/* About — roomy measure */}
       <BlurFade delay={0.04} yOffset={12} duration={MOTION.duration.slow} inView inViewMargin="-60px">
         <section id="about">
-          <div className="flex min-h-0 flex-col gap-y-3">
+          <div className="flex min-h-0 flex-col gap-y-4">
             <h2 className="section-label">About</h2>
-            <div className="prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
+            <div className="prose max-w-[62ch] text-pretty font-sans text-[15.5px] leading-[1.9] tracking-[-0.008em] text-muted-foreground dark:prose-invert">
               <Markdown>{DATA.summary}</Markdown>
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function Page() {
       {/* Education — single reveal, items static */}
       <BlurFade delay={0.04} yOffset={12} duration={MOTION.duration.slow} inView inViewMargin="-50px">
         <section id="education">
-          <div className="flex min-h-0 flex-col gap-y-3">
+          <div className="flex min-h-0 flex-col gap-y-4">
             <h2 className="section-label">Education</h2>
             <div className="flex flex-col gap-3">
               {DATA.education.map((education) => (
@@ -140,7 +140,7 @@ export default function Page() {
       {/* Skills — single reveal, individual hover is CSS only */}
       <BlurFade delay={0.04} yOffset={12} duration={MOTION.duration.slow} inView inViewMargin="-50px">
         <section id="skills">
-          <div className="flex min-h-0 flex-col gap-y-3">
+          <div className="flex min-h-0 flex-col gap-y-4">
             <h2 className="section-label">Skills</h2>
             <div className="flex flex-wrap gap-2">
               {DATA.skills.map((skill) => (

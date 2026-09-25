@@ -4,37 +4,39 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono, Instrument_Serif } from "next/font/google";
+import { Instrument_Sans, Fraunces, Geist_Mono, Instrument_Serif } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import IntroLoader from "@/components/DeerPreloader";
+import ArchitecturalEdges from "@/components/architectural-edges";
 
-// Body — Inter (most readable, Vercel/Linear stack)
-const inter = Inter({
+// Sans — Instrument Sans: airy, editorial, generous apertures (replaces Inter)
+const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 
-// Display — Space Grotesk (geometric, dev-portfolio trend 2025)
-const spaceGrotesk = Space_Grotesk({
+// Display — Fraunces: soft editorial serif for hero & section headings
+const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  style: ["normal", "italic"],
 });
 
-// Mono — JetBrains Mono (developer-culture, labels/metadata)
-const jetBrainsMono = JetBrains_Mono({
+// Mono — Geist Mono: more open than JetBrains, less congested at small sizes
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   weight: ["400", "500"],
   display: "swap",
 });
 
-// Editorial accent — keeps italic "Let's" contrast
+// Editorial accent — Instrument Serif italic for “talk.” moments
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   variable: "--font-instrument",
@@ -100,9 +102,9 @@ export default function RootLayout({
       <body
         className={cn(
           "relative flex min-h-screen flex-col bg-background font-sans antialiased",
-          inter.variable,
-          spaceGrotesk.variable,
-          jetBrainsMono.variable,
+          instrumentSans.variable,
+          fraunces.variable,
+          geistMono.variable,
           instrumentSerif.variable
         )}
       >
@@ -112,12 +114,12 @@ export default function RootLayout({
             {/* Intro / Deer Preloader */}
             <IntroLoader />
 
-            {/* Background grid */}
-            <div className="absolute inset-0 top-0 left-0 right-0 h-[100px] overflow-hidden z-0">
+            {/* Background — warm paper, no cold slate gradient */}
+            <div className="absolute inset-0 top-0 left-0 right-0 h-[140px] overflow-hidden z-0">
               <FlickeringGrid
-                className="h-full w-full"
+                className="h-full w-full opacity-[0.06] dark:opacity-[0.04]"
                 squareSize={2}
-                gridGap={2}
+                gridGap={3}
                 style={{
                   maskImage:
                     "linear-gradient(to bottom, black, transparent)",
@@ -127,15 +129,16 @@ export default function RootLayout({
               />
             </div>
 
-            {/* Main content */}
-            <div className="relative z-10 mx-auto flex w-full flex-1 flex-col max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
-              <div className="relative border-x border-border/60 px-4 sm:px-6">
+            {/* Main content — more breathing room */}
+            <div className="relative z-10 mx-auto flex w-full flex-1 flex-col max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+              <div className="relative px-5 sm:px-7">
+                <ArchitecturalEdges />
                 {children}
               </div>
             </div>
 
             <footer className="relative z-10 mx-auto max-w-3xl px-4 pb-20 sm:px-6">
-              <div className="flex flex-col items-center justify-between gap-3 border-t border-border/70 pt-4 text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:flex-row">
+              <div className="flex flex-col items-center justify-between gap-3 border-t border-border/40 pt-5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 sm:flex-row">
                 <p>© {new Date().getFullYear()} Ashish Tiwari</p>
 
                 <div className="flex items-center gap-4">

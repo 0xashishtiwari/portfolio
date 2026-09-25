@@ -1,31 +1,168 @@
 "use client";
 
-import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
-import { ArrowUpRight, Check, Copy } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useCallback, useEffect, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import { getCalApi } from "@calcom/embed-react";
 import { DATA } from "@/data/resume";
 import { MOTION } from "@/lib/motion";
 import { useSound } from "@/lib/sound";
 
-export default function ContactSection() {
-  const [copied, setCopied] = useState(false);
-  const { enabled: soundEnabled, toggle: toggleSound, play } = useSound();
-  const shouldReduceMotion = useReducedMotion();
-  const copyTimer = useRef<number | null>(null);
+type WaterButtonProps = {
+  children: React.ReactNode;
+  onClick?: () => void;
+  href?: string;
+  variant?: "primary" | "secondary";
+};
 
-  const handleEmailClick = useCallback(() => {
+function WaterButton({ children, onClick, href, variant = "primary" }: WaterButtonProps) {
+  const [hovered, setHovered] = useState(false);
+  const [pressed, setPressed] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+
+  // 6 droplets per button — rise bottom → top, clipped inside
+  const droplets = [
+    { left: "16%", size: 4.2, dur: 2.8, delay: 0, rise: 20, drift: 1.2 },
+    { left: "28%", size: 3, dur: 3.2, delay: 0.45, rise: 18, drift: -1.0 },
+    { left: "42%", size: 3.6, dur: 2.6, delay: 0.9, rise: 22, drift: 1.4 },
+    { left: "58%", size: 2.8, dur: 3.5, delay: 0.25, rise: 19, drift: -1.3 },
+    { left: "72%", size: 4.0, dur: 2.9, delay: 0.65, rise: 21, drift: 0.8 },
+    { left: "86%", size: 2.4, dur: 3.0, delay: 1.1, rise: 17, drift: -0.9 },
+  ];
+
+  const base =
+    variant === "primary"
+      ? "bg-foreground text-background border-foreground/90 hover:bg-foreground/90 hover:border-foreground"
+      : "bg-card text-foreground border-border/60 hover:bg-card hover:border-border dark:bg-white/[0.06] dark:text-foreground dark:border-white/10 dark:hover:bg-white/[0.08]";
+
+  const content = (
+    <>
+      {/* liquid layer — behind text, clipped */}
+      <span
+        className="pointer-events-none absolute inset-0 overflow-hidden rounded-[10px]"
+        aria-hidden
+      >
+        {droplets.map((d, i) => (
+          <motion.span
+            key={i}
+            className="absolute bottom-[5px] rounded-full will-change-transform"
+            style={{
+              left: d.left,
+              width: d.size,
+              height: d.size,
+              background: "currentColor",
+              border: "0.5px solid currentColor",
+              boxShadow: "inset 0 0.6px 0.6px rgba(255,255,255,0.55)",
+              opacity: 0.22,
+            }}
+            initial={{ y: 6, opacity: 0, scale: 0.75, x: 0 }}
+            animate={
+              shouldReduceMotion
+                ? { opacity: 0.16, y: 0, scale: 1, x: 0 }
+                : pressed
+                  ? { y: -d.rise - 6, x: d.drift, opacity: 0, scale: 0.72 }
+                  : {
+                      y: [8, -d.rise],
+                      x: [0, d.drift, d.drift * 0.6, 0],
+                      opacity: hovered ? [0, 0.34, 0.38, 0] : [0, 0.18, 0.22, 0],
+                      scale: [0.72, 1, 0.92, 0.62],
+                    }
+            }
+            transition={
+              shouldReduceMotion
+                ? { duration: 0.2 }
+                : pressed
+                  ? { duration: 0.28, ease: "easeOut" }
+                  : {
+                      duration: d.dur,
+                      delay: d.delay,
+                      repeat: Infinity,
+                      ease: "easeIn",
+                      repeatDelay: 0.4 + Math.random() * 0.6,
+                    }
+            }
+          />
+        ))}
+      </span>
+
+      {/* content layer — always on top */}
+      <span className="relative z-10 inline-flex items-center gap-1.5">
+        {children}
+        <ArrowUpRight
+          aria-hidden
+          className="size-3.5 shrink-0 opacity-70 transition-transform duration-200 ease-out group-hover:translate-x-[3px] group-hover:-translate-y-[2px] group-hover:opacity-100 motion-reduce:transition-none"
+          strokeWidth={1.7}
+        />
+      </span>
+    </>
+  );
+
+  const className = `group relative inline-flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-[10px] border px-5 py-2.5 font-mono text-[12.5px] font-normal tracking-[-0.01em] transition-all duration-200 ease-out hover:-translate-y-px active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100 sm:w-auto ${base}`;
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        style={{ fontFamily: "var(--font-mono)" }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
+        onMouseDown={() => setPressed(true)}
+        onMouseUp={() => setTimeout(() => setPressed(false), 180)}
+        onClick={onClick}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={className}
+      style={{ fontFamily: "var(--font-mono)" }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setTimeout(() => setPressed(false), 180)}
+      onTouchStart={() => setPressed(true)}
+      onTouchEnd={() => setTimeout(() => setPressed(false), 180)}
+    >
+      {content}
+    </button>
+  );
+}
+
+export default function ContactSection() {
+  const { play } = useSound();
+  const shouldReduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const cal = await getCalApi();
+        cal("ui", { theme: "auto" });
+      } catch {}
+    })();
+  }, []);
+
+  const handleBook = useCallback(async () => {
     play("tap");
+    try {
+      const cal = await getCalApi();
+      cal("modal", { calLink: "helloashish/30min" });
+    } catch {}
   }, [play]);
 
-  const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(DATA.contact.email);
-      setCopied(true);
-      play("confirm");
-      if (copyTimer.current) window.clearTimeout(copyTimer.current);
-      copyTimer.current = window.setTimeout(() => setCopied(false), 1600) as unknown as number;
-    } catch {}
+  const handleLinkedIn = useCallback(() => {
+    play("tap");
   }, [play]);
 
   return (
@@ -41,137 +178,43 @@ export default function ContactSection() {
       </div>
 
       <motion.div
-        initial={shouldReduceMotion ? false : MOTION.section.hidden}
-        whileInView={shouldReduceMotion ? undefined : MOTION.section.visible}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+        whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px" }}
         transition={{ duration: MOTION.duration.slow, ease: MOTION.ease.out }}
-        className="flex flex-col gap-8 pt-9 sm:gap-9 sm:pt-10"
+        className="pt-6 sm:pt-7"
       >
-        <div className="flex flex-col gap-4">
-          <h2
-            className="text-[34px] font-normal leading-[0.92] tracking-[-0.045em] text-foreground antialiased sm:text-[42px] sm:leading-[0.92]"
-            style={{ fontFamily: "var(--font-instrument)" }}
-          >
-            Let&apos;s{" "}
-            <em className="font-normal" style={{ fontFamily: "var(--font-instrument)", fontStyle: "italic" }}>
-              talk.
-            </em>
-          </h2>
-          <p
-            className="max-w-[480px] text-[15px] font-normal leading-[1.75] tracking-[-0.012em] text-muted-foreground antialiased sm:text-[15.5px] sm:leading-[1.8]"
-            style={{ fontFamily: "var(--font-sans)" }}
-          >
-            Open to interesting projects, collaborations, and conversations about software.
-          </p>
-        </div>
+        <div className="relative flex flex-col items-center overflow-hidden rounded-[14px] border border-border/50 bg-[oklch(98.6%_0.003_240)] px-6 py-7 text-center shadow-[0_8px_32px_-20px_rgba(15,23,42,0.06)] dark:border-white/[0.07] dark:bg-[oklch(0.205_0_0)] dark:shadow-none sm:px-8 sm:py-8">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.04] dark:opacity-[0.03]"
+            style={{
+              background:
+                "radial-gradient(520px 220px at 18% 0%, rgba(148,163,184,0.28) 0%, transparent 60%), radial-gradient(460px 260px at 88% 90%, rgba(148,163,184,0.18) 0%, transparent 65%)",
+            }}
+          />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
 
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href={`mailto:${DATA.contact.email}`}
-              onClick={handleEmailClick}
-              className="group inline-flex w-fit items-baseline gap-1.5 rounded-sm font-mono text-[13.5px] font-normal tracking-[-0.02em] text-foreground underline decoration-border/50 underline-offset-[8px] decoration-[0.5px] transition-colors duration-200 ease-out hover:decoration-foreground/25 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:text-[14.5px] motion-reduce:transition-none"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              <span>{DATA.contact.email}</span>
-              <ArrowUpRight
-                aria-hidden
-                className="size-[13px] shrink-0 translate-y-[1px] text-muted-foreground/50 transition-transform duration-200 ease-out group-hover:translate-x-[3px] group-hover:-translate-y-[2px] group-hover:text-muted-foreground group-focus-visible:translate-x-[3px] group-focus-visible:-translate-y-[2px] motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
-                strokeWidth={1.6}
-              />
-            </Link>
+          <div className="relative flex flex-col items-center gap-5 text-center">
+            <div className="flex flex-col items-center gap-3 text-center">
+              <h2
+                className="text-center text-[26px] font-normal leading-[0.98] tracking-[-0.03em] text-foreground antialiased sm:text-[30px] sm:leading-[0.98]"
+                style={{ fontFamily: "var(--font-display)", fontWeight: 400 }}
+              >
+                Building something interesting?
+              </h2>
 
-            <button
-              type="button"
-              onClick={handleCopy}
-              aria-label={copied ? "Email copied to clipboard" : "Copy email address"}
-              className="inline-flex items-center gap-1 rounded-sm px-1 py-1 font-mono text-[11px] font-normal tracking-[0.04em] text-muted-foreground/60 transition-colors duration-200 ease-out hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              <span className="relative inline-flex size-3 items-center justify-center">
-                <AnimatePresence mode="wait" initial={false}>
-                  {copied ? (
-                    <motion.span
-                      key="check"
-                      initial={shouldReduceMotion ? false : { scale: 0.7, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={shouldReduceMotion ? undefined : { scale: 0.7, opacity: 0 }}
-                      transition={{ duration: MOTION.duration.fast, ease: "easeOut" }}
-                      className="absolute inset-0 inline-flex items-center justify-center"
-                    >
-                      <Check className="size-3 text-emerald-600" strokeWidth={2} />
-                    </motion.span>
-                  ) : (
-                    <motion.span
-                      key="copy"
-                      initial={shouldReduceMotion ? false : { scale: 0.7, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={shouldReduceMotion ? undefined : { scale: 0.7, opacity: 0 }}
-                      transition={{ duration: MOTION.duration.fast, ease: "easeOut" }}
-                      className="absolute inset-0 inline-flex items-center justify-center"
-                    >
-                      <Copy className="size-3" strokeWidth={1.6} />
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </span>
-              {copied ? "Copied" : "Copy"}
-            </button>
+            </div>
+
+            <div className="flex w-full flex-col items-center gap-3 pt-1 sm:w-auto sm:flex-row sm:items-center sm:justify-center">
+              <WaterButton variant="primary" onClick={handleBook}>
+                Book a call
+              </WaterButton>
+              <WaterButton variant="secondary" href={DATA.contact.social.LinkedIn.url} onClick={handleLinkedIn}>
+                LinkedIn
+              </WaterButton>
+            </div>
           </div>
-
-          <div className="flex items-center gap-5">
-            <Link
-              href={DATA.contact.social.GitHub.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-1 rounded-sm font-mono text-[11.5px] font-normal tracking-[0.04em] text-muted-foreground/70 underline decoration-transparent underline-offset-4 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-border/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              GitHub
-              <ArrowUpRight
-                aria-hidden
-                className="size-3 shrink-0 opacity-60 transition-transform duration-200 ease-out group-hover:translate-x-[3px] group-hover:-translate-y-[2px] group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
-                strokeWidth={1.6}
-              />
-            </Link>
-            <Link
-              href={DATA.contact.social.LinkedIn.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-1 rounded-sm font-mono text-[11.5px] font-normal tracking-[0.04em] text-muted-foreground/70 underline decoration-transparent underline-offset-4 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-border/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              LinkedIn
-              <ArrowUpRight
-                aria-hidden
-                className="size-3 shrink-0 opacity-60 transition-transform duration-200 ease-out group-hover:translate-x-[3px] group-hover:-translate-y-[2px] group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
-                strokeWidth={1.6}
-              />
-            </Link>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3 pt-1">
-          <p
-            className="inline-flex items-center gap-2 font-mono text-[10.5px] font-normal leading-relaxed tracking-[0.06em] text-muted-foreground/45"
-            style={{ fontFamily: "var(--font-mono)" }}
-          >
-            <span className="size-1 rounded-full bg-emerald-500/70" aria-hidden />
-            Available for opportunities · Bhopal, India · Usually replies within 24h
-          </p>
-          <span className="hidden h-3 w-px bg-border/30 sm:block" aria-hidden />
-          <button
-            type="button"
-            onClick={toggleSound}
-            aria-label={soundEnabled ? "Disable interface sounds" : "Enable interface sounds"}
-            aria-pressed={soundEnabled}
-            className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-normal tracking-[0.06em] text-muted-foreground/40 underline decoration-transparent underline-offset-4 transition-colors duration-200 ease-out hover:text-muted-foreground/70 hover:decoration-border/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
-            style={{ fontFamily: "var(--font-mono)" }}
-            title={soundEnabled ? "Sound on — click to mute" : "Sound off — click to enable"}
-          >
-            <span className={`size-1 rounded-full transition-colors ${soundEnabled ? "bg-emerald-500/50" : "bg-muted-foreground/25"}`} aria-hidden />
-            {soundEnabled ? "Sound on" : "Sound off"}
-          </button>
         </div>
       </motion.div>
     </section>

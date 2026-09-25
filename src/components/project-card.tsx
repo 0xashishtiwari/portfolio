@@ -57,7 +57,7 @@ export function ProjectCard({
             <TitleWrapper
               {...titleWrapperProps}
               className={cn(
-                "min-w-0 rounded-sm text-[15px] font-medium leading-none tracking-[-0.015em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                "min-w-0 rounded-sm text-[17px] font-medium leading-none tracking-[-0.015em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 href && "underline decoration-transparent underline-offset-4 transition-colors duration-200 hover:decoration-border/60 group-hover:decoration-foreground/20 motion-reduce:transition-none"
               )}
             >
@@ -81,7 +81,7 @@ export function ProjectCard({
             )}
           </div>
 
-          <p className="mt-1.5 font-mono text-[11px] tabular-nums tracking-wide text-muted-foreground/70">
+          <p className="mt-1.5 font-mono text-[12px] font-medium tabular-nums tracking-wide text-muted-foreground/70">
             {dates}
           </p>
         </div>
@@ -112,17 +112,17 @@ export function ProjectCard({
       )}
 
       <div className="flex-1">
-        <div className="prose prose-sm max-w-none text-[13.5px] leading-[1.6] text-muted-foreground dark:prose-invert prose-p:my-0 prose-p:leading-[1.6]">
+        <div className="prose prose-sm max-w-none text-[15px] font-normal leading-[1.7] tracking-[-0.008em] text-muted-foreground dark:prose-invert prose-p:my-0 prose-p:leading-[1.7]">
           <Markdown>{description}</Markdown>
         </div>
       </div>
 
       {tags && tags.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-1.5">
+        <div className="mt-5 flex flex-wrap gap-2">
           {tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-border/70 bg-background/60 px-2.5 py-1 font-mono text-[10px] font-medium tracking-wide text-muted-foreground"
+              className="rounded-full border border-border/70 bg-background/60 px-3 py-1 font-mono text-[11px] font-medium tracking-wide text-muted-foreground"
             >
               {tag}
             </span>

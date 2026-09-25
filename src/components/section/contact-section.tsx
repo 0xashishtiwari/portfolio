@@ -97,7 +97,7 @@ function WaterButton({ children, onClick, href, variant = "primary" }: WaterButt
     </>
   );
 
-  const className = `group relative inline-flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-[10px] border px-5 py-2.5 font-mono text-[12.5px] font-normal tracking-[-0.01em] transition-all duration-200 ease-out hover:-translate-y-px active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100 sm:w-auto ${base}`;
+  const className = `group relative inline-flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-[10px] border px-5 py-2.5 font-mono text-[13px] font-medium tracking-[-0.01em] transition-all duration-200 ease-out hover:-translate-y-px active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100 sm:w-auto ${base}`;
 
   if (href) {
     return (
@@ -198,8 +198,8 @@ export default function ContactSection() {
           <div className="relative flex flex-col items-center gap-5 text-center">
             <div className="flex flex-col items-center gap-3 text-center">
               <h2
-                className="text-center text-[26px] font-normal leading-[0.98] tracking-[-0.03em] text-foreground antialiased sm:text-[30px] sm:leading-[0.98]"
-                style={{ fontFamily: "var(--font-display)", fontWeight: 400 }}
+                className="text-center text-[28px] font-medium leading-[0.98] tracking-[-0.025em] text-foreground antialiased sm:text-[34px] sm:leading-[0.98]"
+                style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
               >
                 Building something interesting?
               </h2>

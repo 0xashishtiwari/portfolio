@@ -36,10 +36,10 @@ export default function Page() {
 
             <BlurFade delay={0.06} yOffset={8} duration={MOTION.duration.slow}>
               <h1
-                className="text-4xl font-normal leading-[0.92] tracking-[-0.032em] text-foreground sm:text-5xl lg:text-[3.75rem] lg:leading-[0.92]"
+                className="text-[42px] font-medium leading-[0.92] tracking-[-0.03em] text-foreground sm:text-[54px] lg:text-[60px] lg:leading-[0.92]"
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontWeight: 500,
+                  fontWeight: 600,
                 }}
               >
                 Ashish
@@ -50,7 +50,7 @@ export default function Page() {
             </BlurFade>
 
             <BlurFade delay={0.12} yOffset={6} duration={MOTION.duration.normal}>
-              <p className="max-w-[36rem] text-[17px] font-normal leading-[1.85] tracking-[-0.012em] text-muted-foreground sm:text-[18px] sm:leading-[1.85]">
+              <p className="max-w-none whitespace-normal text-[18px] font-normal leading-[1.85] tracking-[-0.008em] text-muted-foreground antialiased sm:whitespace-nowrap sm:text-[18.5px] sm:leading-[1.85]">
                 {DATA.description}
               </p>
             </BlurFade>
@@ -64,12 +64,12 @@ export default function Page() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="group inline-flex h-8 items-center gap-2 rounded-full border border-border/60 bg-card/40 px-3 pr-3.5 text-foreground shadow-sm backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-px hover:border-foreground/15 hover:bg-foreground hover:text-background hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                    className="group inline-flex h-9 items-center gap-2.5 rounded-full border border-border/60 bg-card/40 px-3.5 pr-4 text-foreground shadow-sm backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-px hover:border-foreground/15 hover:bg-foreground hover:text-background hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                   >
                     <span className="flex size-6 items-center justify-center rounded-full bg-background text-foreground ring-1 ring-border/60 transition-colors duration-200 group-hover:bg-background/15 group-hover:text-background group-hover:ring-white/20 motion-reduce:transition-none">
                       <Icon className="size-3.5 shrink-0" />
                     </span>
-                    <span className="font-mono text-[10px] font-medium uppercase tracking-[0.12em]">
+                    <span className="font-mono text-[11px] font-medium uppercase tracking-[0.12em]">
                       {label}
                     </span>
                   </Link>
@@ -83,9 +83,9 @@ export default function Page() {
       {/* About — roomy measure */}
       <BlurFade delay={0.04} yOffset={12} duration={MOTION.duration.slow} inView inViewMargin="-60px">
         <section id="about">
-          <div className="flex min-h-0 flex-col gap-y-4">
+          <div className="flex min-h-0 flex-col gap-y-5">
             <h2 className="section-label">About</h2>
-            <div className="prose max-w-[62ch] text-pretty font-sans text-[15.5px] leading-[1.9] tracking-[-0.008em] text-muted-foreground dark:prose-invert">
+            <div className="prose max-w-[64ch] text-pretty font-sans text-[17px] font-normal leading-[1.8] tracking-[-0.01em] text-muted-foreground dark:prose-invert">
               <Markdown>{DATA.summary}</Markdown>
             </div>
           </div>
@@ -116,18 +116,18 @@ export default function Page() {
                     ) : (
                       <div className="size-9 flex-none rounded-full border border-border bg-muted" />
                     )}
-                    <div className="flex min-w-0 flex-1 flex-col gap-1">
-                      <div className="flex items-center gap-2 text-sm font-medium leading-tight text-foreground sm:text-base">
+                    <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                      <div className="flex items-center gap-2 text-[15px] font-medium leading-tight tracking-[-0.01em] text-foreground sm:text-[17px]">
                         {education.school}
                         <ArrowUpRight
                           className="size-3.5 shrink-0 text-muted-foreground opacity-60 transition-transform duration-200 ease-out group-hover:translate-x-[3px] group-hover:-translate-y-[2px] group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
                           aria-hidden
                         />
                       </div>
-                      <div className="text-sm text-muted-foreground">{education.degree}</div>
+                      <div className="text-[15px] leading-[1.6] tracking-[-0.008em] text-muted-foreground">{education.degree}</div>
                     </div>
                   </div>
-                  <div className="flex flex-none items-center pt-1 text-right text-[11px] tabular-nums text-muted-foreground/80 sm:text-xs">
+                  <div className="flex flex-none items-center pt-1 text-right font-mono text-[12px] tabular-nums tracking-wide text-muted-foreground/80 sm:text-[13px]">
                     {education.start} - {education.end}
                   </div>
                 </Link>
@@ -146,10 +146,10 @@ export default function Page() {
               {DATA.skills.map((skill) => (
                 <div
                   key={skill.name}
-                  className="flex h-9 w-fit items-center gap-2 rounded-full border border-border/80 bg-background/70 px-3.5 shadow-[0_12px_25px_-22px_rgba(15,23,42,0.65)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-border hover:shadow-[0_10px_20px_-18px_rgba(15,23,42,0.2)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                  className="flex h-10 w-fit items-center gap-2.5 rounded-full border border-border/80 bg-background/70 px-4 shadow-[0_12px_25px_-22px_rgba(15,23,42,0.65)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-border hover:shadow-[0_10px_20px_-18px_rgba(15,23,42,0.2)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
-                  {skill.icon && <skill.icon className="size-4 overflow-hidden rounded object-contain" />}
-                  <span className="text-sm font-medium text-foreground">{skill.name}</span>
+                  {skill.icon && <skill.icon className="size-[18px] overflow-hidden rounded object-contain" />}
+                  <span className="text-[15px] font-medium tracking-[-0.01em] text-foreground">{skill.name}</span>
                 </div>
               ))}
             </div>

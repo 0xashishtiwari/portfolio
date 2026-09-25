@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Separator } from "@/components/ui/separator";
@@ -18,17 +19,18 @@ export default function Navbar() {
           return (
             <Tooltip key={item.href}>
               <TooltipTrigger asChild>
-                <a
+                <Link
                   href={item.href}
                   aria-label={item.label}
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
+                  prefetch={!isExternal}
                   className="shrink-0"
                 >
                   <DockIcon className="cursor-pointer rounded-full border border-border/40 bg-white text-muted-foreground/80 shadow-sm ring-0 transition-colors duration-200 hover:border-border hover:bg-white hover:text-foreground hover:shadow-md active:scale-[0.96] dark:border-white/10 dark:bg-white/[0.06] dark:text-muted-foreground dark:hover:border-white/15 dark:hover:bg-white/[0.10] dark:hover:text-foreground">
                     <item.icon className="size-full rounded-full object-contain p-[1px]" />
                   </DockIcon>
-                </a>
+                </Link>
               </TooltipTrigger>
               <TooltipContent
                 side="top"
@@ -41,41 +43,6 @@ export default function Navbar() {
             </Tooltip>
           );
         })}
-        <Separator
-          orientation="vertical"
-          className="mx-1 h-6 w-px shrink-0 self-center bg-border/50 dark:bg-white/10"
-        />
-        {Object.entries(DATA.contact.social)
-          .filter(([_, social]) => social.navbar)
-          .map(([name, social]) => {
-            const isExternal = social.url.startsWith("http");
-            const IconComponent = social.icon;
-            return (
-              <Tooltip key={`social-${name}`}>
-                <TooltipTrigger asChild>
-                  <a
-                    href={social.url}
-                    aria-label={name}
-                    target={isExternal ? "_blank" : undefined}
-                    rel={isExternal ? "noopener noreferrer" : undefined}
-                    className="shrink-0"
-                  >
-                    <DockIcon className="cursor-pointer rounded-full border border-border/40 bg-white text-muted-foreground/80 shadow-sm ring-0 transition-colors duration-200 hover:border-border hover:bg-white hover:text-foreground hover:shadow-md active:scale-[0.96] dark:border-white/10 dark:bg-white/[0.06] dark:text-muted-foreground dark:hover:border-white/15 dark:hover:bg-white/[0.10] dark:hover:text-foreground">
-                      <IconComponent className="size-full rounded-full object-contain p-[1px]" />
-                    </DockIcon>
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent
-                  side="top"
-                  sideOffset={10}
-                  className="rounded-lg border border-border/50 bg-foreground px-2.5 py-1 text-xs font-medium tracking-tight text-background shadow-[0_8px_24px_-12px_rgba(0,0,0,0.2)]"
-                >
-                  <p>{name}</p>
-                  <TooltipArrow className="fill-foreground" />
-                </TooltipContent>
-              </Tooltip>
-            );
-          })}
         <Separator
           orientation="vertical"
           className="mx-1 h-6 w-px shrink-0 self-center bg-border/50 dark:bg-white/10"

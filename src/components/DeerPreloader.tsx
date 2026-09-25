@@ -65,7 +65,7 @@ export default function IntroLoader({
             items-center
             justify-center
             overflow-hidden
-            bg-[#f3f3f1] dark:bg-[#07080a]
+            bg-[#F7F5F0] dark:bg-[#141414]
             px-6
           "
           initial={{ y: 0 }}
@@ -77,18 +77,18 @@ export default function IntroLoader({
             },
           }}
         >
-          {/* Flickering background */}
-          <div className="pointer-events-none absolute inset-0 opacity-[0.45] dark:opacity-[0.22]">
+          {/* Flickering background — warm, subtle */}
+          <div className="pointer-events-none absolute inset-0 opacity-[0.18] dark:opacity-[0.08]">
             <FlickeringGrid
               className="h-full w-full"
               squareSize={3}
               gridGap={5}
-              flickerChance={0.08}
-              maxOpacity={0.18}
+              flickerChance={0.06}
+              maxOpacity={0.14}
             />
           </div>
 
-          {/* Main content */}
+          {/* Main content — warm card */}
           <div className="relative z-10 w-full max-w-[620px]">
             <motion.div
               className="
@@ -98,9 +98,9 @@ export default function IntroLoader({
                 overflow-hidden
                 rounded-2xl
                 border
-                border-black/[0.08] dark:border-white/[0.08]
-                bg-black dark:bg-zinc-900
-                shadow-[0_20px_70px_-25px_rgba(0,0,0,0.25)] dark:shadow-[0_20px_70px_-25px_rgba(0,0,0,0.6)]
+                border-[#D8D4CC] dark:border-[#33312D]
+                bg-white dark:bg-[#1C1C1C]
+                shadow-[0_20px_70px_-25px_rgba(23,23,23,0.12)] dark:shadow-[0_20px_70px_-25px_rgba(0,0,0,0.6)]
               "
               initial={{
                 opacity: 0,
@@ -124,13 +124,14 @@ export default function IntroLoader({
                 className="absolute inset-0 h-full w-full object-cover"
               />
 
-              {/* Loading HUD */}
+              {/* Loading HUD — warm */}
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between">
                 <div className="flex items-center gap-2">
                   <motion.span
-                    className="size-1.5 rounded-full bg-white"
+                    className="size-1.5 rounded-full"
+                    style={{ background: "#B85C3A" }}
                     animate={{
-                      opacity: [0.3, 1, 0.3],
+                      opacity: [0.4, 1, 0.4],
                     }}
                     transition={{
                       duration: 0.8,
@@ -138,7 +139,7 @@ export default function IntroLoader({
                     }}
                   />
 
-                  <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-white/60">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#6F6B63] dark:text-[#9A968D]">
                     Loading
                   </span>
                 </div>
@@ -160,7 +161,7 @@ export default function IntroLoader({
                       font-medium
                       leading-none
                       tracking-[-0.08em]
-                      text-white
+                      text-[#171717] dark:text-[#F2EFE8]
                     "
                   >
                     {Math.round(progress)
@@ -168,17 +169,18 @@ export default function IntroLoader({
                       .padStart(3, "0")}
                   </motion.span>
 
-                  <span className="font-mono text-[10px] text-white/50">
+                  <span className="font-mono text-[10px] text-[#6F6B63]/70 dark:text-[#9A968D]">
                     %
                   </span>
                 </div>
               </div>
 
-              {/* Tiny progress line */}
+              {/* Tiny progress line — accent */}
               <motion.div
-                className="absolute bottom-0 left-0 h-[2px] bg-white/70"
+                className="absolute bottom-0 left-0 h-[2px]"
                 style={{
                   width: `${progress}%`,
+                  background: "#B85C3A",
                 }}
               />
             </motion.div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { ArrowUpRight, Check, Copy, Mail } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { getCalApi } from "@calcom/embed-react";
 import { DATA } from "@/data/resume";
 import { MOTION } from "@/lib/motion";
@@ -97,7 +97,7 @@ function WaterButton({ children, onClick, href, variant = "primary" }: WaterButt
     </>
   );
 
-  const className = `group relative inline-flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-[10px] border px-5 py-2.5 font-mono text-[13px] font-medium tracking-[-0.01em] transition-all duration-200 ease-out hover:-translate-y-px active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100 sm:w-auto ${base}`;
+  const className = `group relative inline-flex w-full cursor-pointer items-center justify-center gap-1.5 overflow-hidden rounded-[10px] border px-5 py-2.5 font-mono text-[13px] font-medium tracking-[-0.01em] transition-all duration-200 ease-out hover:-translate-y-px active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100 sm:w-auto ${base}`;
 
   if (href) {
     return (
@@ -143,6 +143,7 @@ function WaterButton({ children, onClick, href, variant = "primary" }: WaterButt
 export default function ContactSection() {
   const { play } = useSound();
   const shouldReduceMotion = useReducedMotion();
+  const [copiedEmail, setCopiedEmail] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -163,6 +164,15 @@ export default function ContactSection() {
 
   const handleLinkedIn = useCallback(() => {
     play("tap");
+  }, [play]);
+
+  const handleCopyEmail = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(DATA.contact.email);
+      setCopiedEmail(true);
+      play("confirm");
+      setTimeout(() => setCopiedEmail(false), 1800);
+    } catch {}
   }, [play]);
 
   return (
@@ -213,6 +223,53 @@ export default function ContactSection() {
               <WaterButton variant="secondary" href={DATA.contact.social.LinkedIn.url} onClick={handleLinkedIn}>
                 LinkedIn
               </WaterButton>
+            </div>
+
+            {/* Email copy — subtle, centered */}
+            <div className="flex flex-col items-center gap-1.5 pt-1">
+              <div className="flex items-center gap-2">
+                <Mail className="size-3.5 shrink-0 text-muted-foreground/60" strokeWidth={1.6} />
+                <span className="font-mono text-[13px] tracking-[-0.01em] text-muted-foreground" style={{ fontFamily: "var(--font-mono)" }}>
+                  {DATA.contact.email}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleCopyEmail}
+                  aria-label={copiedEmail ? "Email copied" : "Copy email"}
+                  className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-border/40 bg-white px-2 py-1 font-mono text-[11px] font-medium tracking-wide text-muted-foreground transition-colors hover:border-border hover:bg-white hover:text-foreground active:scale-[0.97] dark:border-white/10 dark:bg-white/[0.06] dark:hover:bg-white/[0.10] motion-reduce:transition-none"
+                  style={{ fontFamily: "var(--font-mono)" }}
+                >
+                  <span className="relative inline-flex size-3 items-center justify-center">
+                    <AnimatePresence mode="wait" initial={false}>
+                      {copiedEmail ? (
+                        <motion.span
+                          key="check"
+                          initial={{ scale: 0.7, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0.7, opacity: 0 }}
+                          transition={{ duration: 0.15, ease: "easeOut" }}
+                          className="absolute inset-0 inline-flex items-center justify-center"
+                        >
+                          <Check className="size-3 text-emerald-600" strokeWidth={2} />
+                        </motion.span>
+                      ) : (
+                        <motion.span
+                          key="copy"
+                          initial={{ scale: 0.7, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0.7, opacity: 0 }}
+                          transition={{ duration: 0.15, ease: "easeOut" }}
+                          className="absolute inset-0 inline-flex items-center justify-center"
+                        >
+                          <Copy className="size-3" strokeWidth={1.6} />
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </span>
+                  {copiedEmail ? "Copied" : "Copy"}
+                </button>
+              </div>
+              <span className="font-mono text-[11px] tracking-wide text-muted-foreground/60">Usually replies within 24h</span>
             </div>
           </div>
         </div>

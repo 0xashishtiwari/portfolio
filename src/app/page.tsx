@@ -13,6 +13,7 @@ import GitHubSection from "@/components/section/github-section";
 import { ArrowUpRight } from "lucide-react";
 import { Icons } from "@/components/icons";
 import { MOTION } from "@/lib/motion";
+import { useSound } from "@/lib/sound";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -23,11 +24,15 @@ const socialLinks = [
   { label: "LeetCode", href: "https://leetcode.com/1xashishtiwari", icon: Icons.leetcode },
 ];
 
+import RetroComputer from "@/components/retro-computer";
+
 export default function Page() {
+  const { play } = useSound();
   return (
     <main className="relative flex min-h-dvh flex-col gap-12 pb-10 sm:gap-16">
       {/* Hero — airy, editorial */}
-      <section id="hero" className="pt-2 sm:pt-4">
+      <section id="hero" className="relative pt-2 sm:pt-4">
+        <RetroComputer />
         <div className="mx-auto w-full max-w-3xl">
           <div className="flex flex-col gap-4 py-4 sm:py-6">
             <BlurFade delay={0} yOffset={8} duration={MOTION.duration.slow} blur="4px">
@@ -64,6 +69,8 @@ export default function Page() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
+                    onMouseEnter={() => play("hover")}
+                    onFocus={() => play("hover")}
                     className="group inline-flex h-9 items-center gap-2.5 rounded-full border border-border/60 bg-card/40 px-3.5 pr-4 text-foreground shadow-sm backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-px hover:border-foreground/15 hover:bg-foreground hover:text-background hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                   >
                     <span className="flex size-6 items-center justify-center rounded-full bg-background text-foreground ring-1 ring-border/60 transition-colors duration-200 group-hover:bg-background/15 group-hover:text-background group-hover:ring-white/20 motion-reduce:transition-none">
@@ -104,30 +111,34 @@ export default function Page() {
                   href={education.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-start justify-between gap-4 rounded-2xl border border-border/70 bg-card/40 p-3.5 transition-all duration-200 ease-out hover:-translate-y-px hover:border-border hover:bg-card/80 hover:shadow-[0_8px_24px_-16px_rgba(15,23,42,0.12)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:p-4 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100"
+                  className="group flex items-center justify-between gap-3 overflow-hidden rounded-2xl border border-border/70 bg-card/40 p-3 transition-all duration-200 ease-out hover:-translate-y-px hover:border-border hover:bg-card/80 hover:shadow-[0_8px_24px_-16px_rgba(15,23,42,0.12)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:gap-4 sm:p-4 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100"
                 >
-                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <div className="flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3">
                     {education.logoUrl ? (
                       <img
                         src={education.logoUrl}
                         alt={education.school}
-                        className="size-9 flex-none rounded-full border border-border bg-white/80 p-1.5 object-contain"
+                        className="size-8 flex-none rounded-full border border-border bg-white/80 p-1 object-contain sm:size-9 sm:p-1.5"
                       />
                     ) : (
-                      <div className="size-9 flex-none rounded-full border border-border bg-muted" />
+                      <div className="size-8 flex-none rounded-full border border-border bg-muted sm:size-9" />
                     )}
-                    <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                      <div className="flex items-center gap-2 text-[15px] font-medium leading-tight tracking-[-0.01em] text-foreground sm:text-[17px]">
-                        {education.school}
+                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                      <div className="flex items-center gap-1.5">
+                        <span className="truncate text-[14px] font-medium leading-none tracking-[-0.01em] text-foreground sm:text-[15px]">
+                          {education.school}
+                        </span>
                         <ArrowUpRight
-                          className="size-3.5 shrink-0 text-muted-foreground opacity-60 transition-transform duration-200 ease-out group-hover:translate-x-[3px] group-hover:-translate-y-[2px] group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
+                          className="size-3 shrink-0 text-muted-foreground opacity-60 transition-transform duration-200 ease-out group-hover:translate-x-[3px] group-hover:-translate-y-[2px] group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
                           aria-hidden
                         />
                       </div>
-                      <div className="text-[15px] leading-[1.6] tracking-[-0.008em] text-muted-foreground">{education.degree}</div>
+                      <span className="truncate text-[13px] leading-none tracking-[-0.008em] text-muted-foreground sm:text-[13.5px]">
+                        Computer Science and Engineering
+                      </span>
                     </div>
                   </div>
-                  <div className="flex flex-none items-center pt-1 text-right font-mono text-[12px] tabular-nums tracking-wide text-muted-foreground/80 sm:text-[13px]">
+                  <div className="flex shrink-0 items-center whitespace-nowrap font-mono text-[11px] tabular-nums tracking-wide text-muted-foreground/80 sm:text-[12px]">
                     {education.start} - {education.end}
                   </div>
                 </Link>

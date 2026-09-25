@@ -17,7 +17,7 @@ function getCtx(): AudioContext | null {
   return audioCtx;
 }
 
-function tick(kind: "tap" | "confirm" | "toggle" = "tap", volume = 0.05) {
+function tick(kind: "tap" | "confirm" | "toggle" | "hover" = "tap", volume = 0.05) {
   const ctx = getCtx();
   if (!ctx) return;
   const now = ctx.currentTime;
@@ -25,10 +25,11 @@ function tick(kind: "tap" | "confirm" | "toggle" = "tap", volume = 0.05) {
   const gain = ctx.createGain();
   const filter = ctx.createBiquadFilter();
   filter.type = "highpass";
-  filter.frequency.value = 420;
-  osc.type = kind === "confirm" ? "sine" : "triangle";
-  osc.frequency.value = kind === "toggle" ? 980 : kind === "confirm" ? 1180 : 880;
-  const dur = kind === "confirm" ? 0.09 : 0.065;
+  filter.frequency.value = kind === "hover" ? 520 : 420;
+  osc.type = kind === "confirm" || kind === "hover" ? "sine" : "triangle";
+  osc.frequency.value =
+    kind === "hover" ? 1320 : kind === "toggle" ? 980 : kind === "confirm" ? 1180 : 880;
+  const dur = kind === "confirm" ? 0.09 : kind === "hover" ? 0.048 : 0.065;
   gain.gain.setValueAtTime(0, now);
   gain.gain.linearRampToValueAtTime(volume, now + 0.008);
   gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
@@ -59,10 +60,10 @@ export function useSound() {
   }, []);
 
   const play = useCallback(
-    (kind: "tap" | "confirm" | "toggle" = "tap") => {
+    (kind: "tap" | "confirm" | "toggle" | "hover" = "tap") => {
       if (!enabled) return;
-      // volume kept very low
-      const vol = kind === "confirm" ? 0.04 : kind === "toggle" ? 0.035 : 0.045;
+      // volume kept very low — hover even softer
+      const vol = kind === "hover" ? 0.028 : kind === "confirm" ? 0.04 : kind === "toggle" ? 0.035 : 0.045;
       tick(kind, vol);
     },
     [enabled]

@@ -1,0 +1,890 @@
+---
+title: "How I Fresh-Installed Windows 11 Without a USB Drive"
+description: "An experimental case study of deploying Windows 11 to an NVMe SSD using an existing Windows environment, DISM, BCDBoot, and Intel VMD/RST driver injection."
+date: "2026-10-03"
+author: "Ashish Kumar Tiwari"
+tags:
+  - Windows 11
+  - Intel VMD
+  - Intel RST
+  - DISM
+  - BCDBoot
+  - NVMe
+  - UEFI
+  - Windows Deployment
+  - Experimental Case Study
+---
+
+# How I Fresh-Installed Windows 11 Without a USB Drive
+
+> **An experimental case study of deploying Windows 11 to an NVMe SSD using an existing internal Windows environment, DISM, UEFI boot reconstruction, and offline Intel VMD/RST driver injection.**
+
+## Abstract
+
+What started as a practical problem—installing Windows 11 without having a USB drive available—turned into a useful systems experiment.
+
+I had an Acer Aspire A515-56 with two internal drives: a Kingston NVMe SSD that I wanted to use for a fresh Windows 11 installation, and a Toshiba 1 TB HDD containing my existing data. Instead of creating external installation media, I explored whether the existing Windows environment on the machine could be used to deploy a completely fresh Windows 11 image directly to the NVMe SSD.
+
+The first deployment appeared to work. Windows was successfully applied to the SSD and the UEFI boot files were created. However, the first boot immediately failed with `INACCESSIBLE_BOOT_DEVICE (0x7B)`.
+
+That failure led to the most important part of the experiment: investigating the machine's Intel VMD/RST storage configuration. The existing Windows installation contained the required Intel VMD storage driver, while the newly deployed Windows environment did not have the appropriate driver available at boot time. After identifying a compatible `iaStorVD` package and injecting it into the offline Windows installation, the system successfully booted Windows 11 from the NVMe SSD.
+
+This case study documents the process, the failure, the investigation, the fix, and the final result. It is intentionally presented as an experimental case study rather than a claim of a universally new Windows installation method.
+
+---
+
+# 1. Why I Tried This
+
+A normal clean Windows installation usually starts by booting from external installation media.
+
+In my situation, I did not have a USB drive available.
+
+At the same time, I already had:
+
+- A working Windows environment.
+- A Windows 11 ISO.
+- A secondary internal HDD.
+- A target NVMe SSD.
+- Enough disk space to create a temporary working environment.
+
+That raised a simple question:
+
+> **Can I use the computer's existing storage and Windows environment to perform a completely fresh Windows 11 installation without using a USB drive?**
+
+The answer turned out to be yes—but not without solving an unexpected storage-driver problem.
+
+---
+
+# 2. The System I Tested
+
+The experiment was performed on an **Acer Aspire A515-56**.
+
+The relevant hardware configuration was:
+
+| Component | Configuration |
+| --- | --- |
+| CPU | Intel Core i5-1135G7 |
+| System SSD | Kingston NVMe, approximately 256 GB |
+| Secondary drive | Toshiba MQ04ABF100, approximately 1 TB |
+| Firmware | UEFI |
+| Partition scheme | GPT |
+| Target operating system | Windows 11 Home Single Language |
+
+The two physical drives were:
+
+```text
+Disk 0
+TOSHIBA MQ04ABF100
+~1 TB
+
+Disk 1
+NVMe KINGSTON OM8PDP3256B-AA1
+~256 GB
+```
+
+The Kingston NVMe was going to become the permanent Windows drive.
+
+The Toshiba HDD was going to remain the data drive.
+
+---
+
+# 3. The Basic Idea
+
+Instead of:
+
+```text
+USB → Windows Setup → SSD
+```
+
+I wanted to try:
+
+```text
+Existing Windows
+       ↓
+Temporary Windows environment on HDD
+       ↓
+Windows 11 installation image
+       ↓
+DISM
+       ↓
+NVMe SSD
+       ↓
+BCDBoot
+       ↓
+Fresh Windows 11
+```
+
+The important difference is that I was not running the normal graphical Windows Setup program.
+
+I was deploying the Windows image directly.
+
+---
+
+# 4. Preparing for the Experiment
+
+Before touching the target SSD, I made sure important data was preserved.
+
+The HDD contained my project files, so I created a backup of the important project data on the HDD before performing destructive operations on the SSD.
+
+I also had to deal with BitLocker-protected volumes. The recovery key was available through my Microsoft account and was used privately when the protected volume needed to be unlocked.
+
+The recovery key itself is not included here.
+
+This was an important part of the experiment: the goal was a fresh Windows installation, **not** accidental data loss.
+
+---
+
+# 5. Creating a Temporary Windows Environment
+
+Because there was no USB installer, I created a temporary Windows environment on the HDD.
+
+This environment acted as the working system from which I could:
+
+- Inspect the disks.
+- Run DiskPart.
+- Run DISM.
+- Access the Windows 11 ISO.
+- Inspect the existing Windows DriverStore.
+- Inject drivers into the new Windows installation.
+- Create UEFI boot files.
+
+The temporary installation was never intended to become the final system.
+
+It was essentially a staging environment.
+
+---
+
+# 6. Preparing the Windows 11 Image
+
+The Windows 11 ISO contained:
+
+```text
+E:\sources\install.wim
+```
+
+I checked the available image indexes and selected:
+
+```text
+Index 3
+Windows 11 Home Single Language
+```
+
+The Windows image could then be deployed using DISM.
+
+The basic command was:
+
+```cmd
+dism /Apply-Image /ImageFile:E:\sources\install.wim /Index:3 /ApplyDir:T:\
+```
+
+At this point, Windows itself could be copied directly onto the target partition without booting from installation media.
+
+---
+
+# 7. Preparing the NVMe SSD
+
+The Kingston NVMe was identified before any destructive operation.
+
+I verified the physical disk using PowerShell:
+
+```powershell
+Get-Disk |
+Format-Table Number,FriendlyName,Size,PartitionStyle
+```
+
+The important result was:
+
+```text
+NVMe KINGSTON OM8PDP3256B-AA1
+```
+
+The target SSD was then prepared as a GPT disk with a UEFI-compatible partition layout.
+
+The resulting structure contained:
+
+- An EFI System Partition.
+- An MSR partition.
+- A Windows partition.
+
+The Windows image was applied to the Windows partition.
+
+---
+
+# 8. Creating the Bootloader
+
+After applying the Windows image, I needed to make the installation bootable.
+
+I used BCDBoot:
+
+```cmd
+bcdboot T:\Windows /s S: /f UEFI
+```
+
+Here:
+
+- `T:` represented the new Windows partition.
+- `S:` represented the EFI System Partition.
+
+I also verified that the expected boot files existed:
+
+```powershell
+Test-Path "T:\Windows\System32\winload.efi"
+```
+
+and:
+
+```powershell
+Test-Path "S:\EFI\Microsoft\Boot\bootmgfw.efi"
+```
+
+Both checks succeeded.
+
+At this point, the installation looked complete.
+
+Then I tried to boot it.
+
+---
+
+# 9. The First Failure
+
+It failed.
+
+The system produced:
+
+```text
+INACCESSIBLE_BOOT_DEVICE
+```
+
+with:
+
+```text
+0x7B
+```
+
+This was the turning point of the experiment.
+
+The Windows files were present.
+
+The EFI bootloader was present.
+
+The firmware could find the Windows installation.
+
+But Windows itself could not access the boot storage device.
+
+That suggested that the problem was not the Windows image or the bootloader.
+
+Something was missing between Windows and the NVMe storage device.
+
+---
+
+# 10. Looking at Intel VMD/RST
+
+The laptop uses Intel VMD/RST storage technology.
+
+The relevant controllers identified on the machine included:
+
+```text
+Intel RST VMD Managed Controller 09AB
+Intel RST VMD Controller 9A0B
+```
+
+The associated hardware IDs included:
+
+```text
+PCI\VEN_8086&DEV_9A0B
+PCI\VEN_8086&DEV_09AB
+```
+
+This immediately became important.
+
+The existing Windows installation had an Intel RST/VMD driver installed, but the newly deployed Windows environment did not have the same working storage configuration.
+
+That gave me a strong hypothesis:
+
+> The newly deployed Windows installation could not access the NVMe early enough during boot because the required Intel VMD storage driver was missing or unsuitable.
+
+---
+
+# 11. Investigating the Existing DriverStore
+
+The old Windows installation became extremely useful at this point.
+
+Instead of searching randomly for drivers, I inspected the existing Windows DriverStore and found an Intel VMD package.
+
+One package was associated with:
+
+```text
+19.2.0.1003
+```
+
+However, the package I initially tried to use was incomplete for the offline deployment.
+
+It was missing:
+
+```text
+RstMwService.exe
+```
+
+When I tried to use that package with DISM, the operation failed with:
+
+```text
+Error 2
+The system cannot find the file specified.
+```
+
+Rather than forcing the incomplete package into the installation, I went back to the DriverStore and continued looking.
+
+---
+
+# 12. Finding the Working VMD Package
+
+I found another complete Intel RST VMD package:
+
+```text
+18.6.1.1016
+```
+
+It was located under the existing Windows DriverStore:
+
+```text
+C:\Windows\System32\DriverStore\FileRepository\iastorvd.inf_amd64_a5ea1b1d8db1527e
+```
+
+The package contained files including:
+
+```text
+iaStorVD.inf
+iaStorVD.sys
+iaStorAfs.sys
+iaStorAfsNative.exe
+iaStorAfsService.exe
+iaStorVD.cat
+RstMwService.exe
+```
+
+More importantly, the package matched the VMD hardware IDs identified on the laptop.
+
+This gave me a complete, hardware-relevant driver package rather than simply the newest driver I could find.
+
+---
+
+# 13. Injecting the Driver Offline
+
+I copied the complete package to:
+
+```text
+D:\RSTDriver
+```
+
+Then I injected the driver into the offline Windows installation:
+
+```cmd
+dism /Image:T:\ /Add-Driver /Driver:D:\RSTDriver\iaStorVD.inf
+```
+
+This time DISM completed successfully.
+
+The new Windows installation now contained the Intel VMD storage driver.
+
+---
+
+# 14. Verifying the Driver Was Available at Boot
+
+I didn't want to assume that simply adding the driver was enough.
+
+I loaded the offline Windows SYSTEM registry hive and inspected the `iaStorVD` service configuration.
+
+The important value was:
+
+```text
+Start = 0
+```
+
+In other words:
+
+```text
+iaStorVD
+    Start
+      ↓
+     0x0
+```
+
+This indicated that the driver was configured as a boot-start driver.
+
+That was important because the storage driver had to be available during the early boot process—not merely installed after Windows had already started.
+
+---
+
+# 15. Trying the Boot Again
+
+I booted the machine again from the Kingston NVMe.
+
+This time, Windows 11 started successfully.
+
+The system had crossed the exact point where it had previously failed.
+
+The sequence had effectively changed from:
+
+```text
+Windows boot
+    ↓
+Intel VMD
+    ↓
+No usable boot-time driver
+    ↓
+0x7B
+```
+
+to:
+
+```text
+Windows boot
+    ↓
+iaStorVD
+    ↓
+Intel VMD
+    ↓
+Kingston NVMe
+    ↓
+Windows 11
+```
+
+This was the key result of the experiment.
+
+---
+
+# 16. The Fresh Windows Environment
+
+Once Windows 11 successfully booted from the Kingston NVMe, the system was genuinely running the new installation.
+
+There were still some post-installation driver issues.
+
+For example, the graphics adapter initially appeared as:
+
+```text
+Microsoft Basic Display Adapter
+```
+
+rather than the proper Intel graphics device.
+
+Windows Update subsequently installed the required hardware drivers.
+
+There was also an initial Windows Update failure for the Intel display driver:
+
+```text
+0x80240016
+```
+
+After restarting and allowing Windows Update to complete its pending operations, the driver installation succeeded.
+
+The system eventually reached a normal working state.
+
+---
+
+# 17. Cleaning Up the Temporary Installation
+
+Once I was completely satisfied that the Kingston NVMe Windows installation was working, the temporary Windows environment on the HDD was no longer necessary.
+
+Before cleanup, the HDD looked roughly like:
+
+```text
+Disk 0 — Toshiba 1 TB
+
+D: HDD
+~828 GB
+
+E: TempWindows
+~171 GB
+
+HDD_EFI
+~300 MB
+```
+
+The temporary Windows partition and its temporary EFI partition were removed.
+
+The original HDD data partition was then extended to use the reclaimed space.
+
+The final HDD layout became:
+
+```text
+Disk 0 — Toshiba 1 TB
+
+D: HDD
+~1 TB
+```
+
+The Kingston SSD was left untouched.
+
+---
+
+# 18. Final System Layout
+
+The final machine looked like this:
+
+```text
+KINGSTON NVMe
+~256 GB
+│
+├── EFI
+├── MSR
+└── C: Windows
+```
+
+and:
+
+```text
+TOSHIBA HDD
+~1 TB
+│
+└── D: HDD
+    └── User data / Projects
+```
+
+The machine was now running Windows 11 from the NVMe SSD while the Toshiba HDD remained available as a data drive.
+
+---
+
+# 19. What Actually Solved the Problem?
+
+The most important lesson from the experiment was that **deploying the Windows image was not the difficult part**.
+
+DISM handled that successfully.
+
+Creating the UEFI boot files was also straightforward with BCDBoot.
+
+The difficult part was getting the newly deployed Windows installation to understand the storage controller early enough during boot.
+
+The critical sequence was:
+
+```text
+Windows 11 WIM
+       ↓
+DISM deployment
+       ↓
+UEFI boot configuration
+       ↓
+0x7B
+       ↓
+Identify Intel VMD
+       ↓
+Find compatible iaStorVD package
+       ↓
+Inject driver offline
+       ↓
+Configure boot-start
+       ↓
+Successful boot
+```
+
+This is why the Intel RST/VMD driver became the central technical issue in the experiment.
+
+---
+
+# 20. Was Intel RST Definitely the Reason My Original Windows 10 Upgrade Failed?
+
+This is where I want to be careful.
+
+It is tempting to conclude that the Intel RST driver was definitely the reason the original Windows 10 → Windows 11 upgrade did not work.
+
+The experiment proves something narrower.
+
+We **did prove** that:
+
+- The laptop uses Intel VMD/RST.
+- The newly deployed Windows installation initially could not boot from the NVMe.
+- The failure was `INACCESSIBLE_BOOT_DEVICE (0x7B)`.
+- A compatible `iaStorVD` driver was found.
+- Injecting that driver fixed the boot problem.
+- Windows 11 subsequently booted successfully from the NVMe.
+
+However, we did **not** capture enough of the original Windows Setup/Windows Update compatibility logs to prove that Intel RST was the specific reason the original automatic upgrade was blocked.
+
+So the scientifically accurate conclusion is:
+
+> **Intel VMD/RST compatibility was a critical storage dependency during the fresh deployment, but this experiment does not establish that it was the sole cause of the original Windows 10 → Windows 11 upgrade failure.**
+
+---
+
+# 21. What This Experiment Demonstrates
+
+Under the tested conditions, the experiment demonstrated that a fresh Windows 11 installation can be performed without external USB installation media by combining:
+
+- An existing internal Windows environment.
+- A temporary HDD-based Windows environment.
+- A Windows 11 WIM image.
+- DISM image deployment.
+- GPT/UEFI partitioning.
+- BCDBoot.
+- Offline Intel VMD/RST driver injection.
+- Boot-start driver verification.
+
+The important qualification is that this was tested on one specific hardware configuration.
+
+It should therefore be treated as a **demonstrated workflow**, not as a universal Windows installation method.
+
+---
+
+# 22. Why I Consider This an Experimental Case Study
+
+I don't want to present this as a claim that I invented a completely new Windows installation technology.
+
+There are already many ways to deploy Windows without conventional installation media.
+
+What makes this worth documenting is the actual troubleshooting path and the combination of techniques used on this specific system.
+
+The experiment had:
+
+- A defined problem.
+- A defined target.
+- A reproducible environment.
+- An initial hypothesis.
+- A failed experiment.
+- Diagnostic investigation.
+- A targeted intervention.
+- Verification.
+- A successful result.
+- Clearly defined limitations.
+
+That makes it much more useful as an **experimental systems case study** than as a simple "Windows installation trick."
+
+---
+
+# 23. Limitations
+
+There are several important limitations.
+
+### Single system
+
+The procedure was tested on one Acer Aspire A515-56.
+
+### Hardware-specific storage configuration
+
+Intel VMD/RST configurations can differ between systems.
+
+A driver that works on this machine should not automatically be injected into another machine.
+
+### Driver selection matters
+
+The newest available RST driver is not necessarily the appropriate package for every installation environment.
+
+Hardware IDs should be checked.
+
+### BitLocker adds complexity
+
+Encrypted volumes may require recovery keys when accessed from another Windows environment.
+
+### Destructive disk operations
+
+The workflow involves operations that can destroy partitions.
+
+The physical disk must always be identified by model and capacity before destructive commands are used.
+
+### No claim of universal compatibility
+
+The experiment demonstrates feasibility on the tested system. More hardware would need to be tested before making broader claims.
+
+---
+
+# 24. Reproducibility Checklist
+
+Before attempting a similar experiment, I would verify all of the following:
+
+- [ ] Existing Windows environment works.
+- [ ] Windows 11 ISO is available.
+- [ ] Target NVMe has been positively identified.
+- [ ] Important data has been backed up.
+- [ ] BitLocker recovery information is available if required.
+- [ ] Target disk is confirmed before destructive operations.
+- [ ] UEFI mode is enabled.
+- [ ] Target disk uses GPT.
+- [ ] Windows image index has been verified.
+- [ ] Required storage controller has been identified.
+- [ ] Compatible storage driver has been identified.
+- [ ] Driver package is complete.
+- [ ] UEFI boot files have been created.
+- [ ] Boot-start storage driver has been verified.
+- [ ] Fresh Windows boot has been confirmed before deleting the temporary environment.
+
+---
+
+# 25. Key Commands Used
+
+## Inspect disks
+
+```powershell
+Get-Disk |
+Format-Table Number,FriendlyName,Size,PartitionStyle
+```
+
+## Inspect partitions
+
+```powershell
+Get-Partition -DiskNumber 0 |
+Format-Table PartitionNumber,DriveLetter,Size,Type
+```
+
+## Inspect volumes
+
+```powershell
+Get-Volume |
+Format-Table DriveLetter,FileSystemLabel,FileSystem,SizeRemaining,Size -Auto
+```
+
+## Apply the Windows image
+
+```cmd
+dism /Apply-Image /ImageFile:E:\sources\install.wim /Index:3 /ApplyDir:T:\
+```
+
+## Create UEFI boot files
+
+```cmd
+bcdboot T:\Windows /s S: /f UEFI
+```
+
+## Inject the VMD driver
+
+```cmd
+dism /Image:T:\ /Add-Driver /Driver:D:\RSTDriver\iaStorVD.inf
+```
+
+## Verify the Windows bootloader
+
+```powershell
+Test-Path "T:\Windows\System32\winload.efi"
+```
+
+## Verify the EFI bootloader
+
+```powershell
+Test-Path "S:\EFI\Microsoft\Boot\bootmgfw.efi"
+```
+
+## Check the installed graphics adapter
+
+```powershell
+Get-CimInstance Win32_VideoController |
+Select-Object Name,DriverVersion,CurrentHorizontalResolution,CurrentVerticalResolution
+```
+
+---
+
+# 26. The Most Important Safety Lesson
+
+The most dangerous part of this entire procedure is not DISM.
+
+It is disk selection.
+
+A command such as:
+
+```text
+clean
+```
+
+can destroy an entire disk.
+
+Therefore, a reproducible procedure should never tell someone to blindly assume that:
+
+```text
+Disk 0 = HDD
+Disk 1 = SSD
+```
+
+Disk numbers are system-dependent.
+
+Instead, always verify:
+
+```powershell
+Get-Disk
+```
+
+and confirm:
+
+- Model
+- Capacity
+- Partition style
+- Intended target
+
+before making destructive changes.
+
+---
+
+# 27. Future Experiments
+
+The next step would be to test whether the workflow generalizes.
+
+Possible experiments include:
+
+### Different Intel generations
+
+Test the workflow on different Intel VMD generations.
+
+### Different laptop manufacturers
+
+Try equivalent systems from Acer, Lenovo, Dell, ASUS, and HP.
+
+### Different RST versions
+
+Compare compatible and incompatible driver packages.
+
+### Automated deployment
+
+A future implementation could automatically:
+
+1. Detect the target NVMe.
+2. Detect Intel VMD controllers.
+3. Identify the required driver.
+4. Apply the Windows image.
+5. Inject the driver.
+6. Create UEFI boot files.
+7. Verify the installation before rebooting.
+
+Such automation would require substantially more testing before being considered safe.
+
+---
+
+# 28. Conclusion
+
+This experiment started with a simple limitation: I did not have a USB drive available for a fresh Windows installation.
+
+Instead of stopping there, I tried to use the resources already inside the computer.
+
+The approach worked—but only after solving an important storage-driver problem.
+
+The Windows 11 image could be deployed directly to the NVMe SSD with DISM, and the UEFI bootloader could be created with BCDBoot. The first boot nevertheless failed because the new Windows environment could not properly access the NVMe through the system's Intel VMD storage controller.
+
+Investigating the existing Windows DriverStore revealed a compatible Intel RST VMD package. Injecting the `iaStorVD` driver into the offline Windows installation and verifying its boot-start configuration allowed Windows 11 to boot successfully from the NVMe.
+
+After the new installation was confirmed to be stable, the temporary HDD installation was removed and the HDD was restored as a data drive.
+
+The final result was a clean Windows 11 installation without using external USB installation media.
+
+More importantly, the experiment showed how a seemingly simple installation failure can reveal a deeper dependency between the operating system, boot process, storage controller, and hardware-specific driver.
+
+That is the part of this experiment I found most interesting.
+
+---
+
+## Final Result
+
+```text
+Fresh Windows 11
+        ↓
+Kingston NVMe SSD
+        ↓
+UEFI / GPT
+        ↓
+Intel VMD/RST supported
+        ↓
+System boots successfully
+
+Toshiba HDD
+        ↓
+Preserved as data drive
+        ↓
+Projects and personal data retained
+```
+
+**Result: Successful on the tested Acer Aspire A515-56 configuration.**
+
+> This case study documents one tested implementation. It should not be treated as a guarantee that the same procedure will work on every Windows system.

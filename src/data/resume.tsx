@@ -6,7 +6,7 @@ import { Typescript } from "@/components/ui/svgs/typescript";
 import { Nodejs } from "@/components/ui/svgs/nodejs";
 import { Postgresql } from "@/components/ui/svgs/postgresql";
 import { Docker } from "@/components/ui/svgs/docker";
-import { Csharp } from "@/components/ui/svgs/csharp";
+import { Cplusplus } from "@/components/ui/svgs/cplusplus";
 import { Javascript } from "@/components/ui/svgs/javascript";
 
 export const DATA = {
@@ -23,11 +23,11 @@ export const DATA = {
   skills: [
     { name: "React", icon: ReactLight },
     { name: "Next.js", icon: NextjsIconDark },
-    { name: "Typescript", icon: Typescript },
+    { name: "TypeScript", icon: Typescript },
     { name: "Node.js", icon: Nodejs },
     { name: "Postgres", icon: Postgresql },
     { name: "Docker", icon: Docker },
-    { name: "C++", icon: Csharp },
+    { name: "C++", icon: Cplusplus },
     { name: "JavaScript", icon: Javascript },
   ],
   navbar: [

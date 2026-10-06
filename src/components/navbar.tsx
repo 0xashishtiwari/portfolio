@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Separator } from "@/components/ui/separator";
@@ -32,9 +35,21 @@ const dockItems: DockItem[] = [
 ];
 
 export default function Navbar() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-4 z-30 flex justify-center px-3 sm:bottom-5 sm:px-4">
-      <Dock className="pointer-events-auto relative mx-auto flex h-[52px] w-fit max-w-[min(88vw,22rem)] items-end gap-1 rounded-full border border-border/50 bg-white/75 px-2 py-1.5 shadow-[0_8px_32px_-16px_rgba(15,23,42,0.14),0_2px_8px_-4px_rgba(15,23,42,0.08)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 dark:border-white/[0.08] dark:bg-[oklch(0.205_0_0)]/85 dark:shadow-[0_16px_40px_-16px_rgba(0,0,0,0.6)]">
+      <Dock
+        magnification={isMobile ? 44 : undefined}
+        distance={isMobile ? 90 : undefined}
+        className="pointer-events-auto relative mx-auto flex h-[52px] w-fit max-w-[min(88vw,22rem)] items-end gap-1 rounded-full border border-border/50 bg-white/75 px-2 py-1.5 shadow-[0_8px_32px_-16px_rgba(15,23,42,0.14),0_2px_8px_-4px_rgba(15,23,42,0.08)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 dark:border-white/[0.08] dark:bg-[oklch(0.205_0_0)]/85 dark:shadow-[0_16px_40px_-16px_rgba(0,0,0,0.6)]">
         {dockItems.map((item) => {
           const isExternal = item.href.startsWith("http");
           return (

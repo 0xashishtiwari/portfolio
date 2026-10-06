@@ -26,9 +26,20 @@ const socialLinks = [
 
 import RetroComputer from "@/components/retro-computer";
 import Magnetic from "@/components/magnetic";
+import { ReactDark } from "@/components/ui/svgs/reactDark";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const { play } = useSound();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
   return (
     <main className="relative flex min-h-dvh flex-col gap-12 pb-10 sm:gap-16">
       {/* Hero — airy, editorial */}
@@ -113,7 +124,7 @@ export default function Page() {
                   href={education.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-between gap-3 overflow-hidden rounded-2xl border border-border/70 bg-card/40 p-3 transition-all duration-200 ease-out hover:-translate-y-px hover:border-border hover:bg-card/80 hover:shadow-[0_8px_24px_-16px_rgba(15,23,42,0.12)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:gap-4 sm:p-4 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100"
+                  className="group flex flex-col gap-1.5 overflow-hidden rounded-2xl border border-border/70 bg-card/40 p-3 transition-all duration-200 ease-out hover:-translate-y-px hover:border-border hover:bg-card/80 hover:shadow-[0_8px_24px_-16px_rgba(15,23,42,0.12)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:gap-4 sm:p-4"
                 >
                   <div className="flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3">
                     {education.logoUrl ? (
@@ -140,7 +151,7 @@ export default function Page() {
                       </span>
                     </div>
                   </div>
-                  <div className="flex shrink-0 items-center whitespace-nowrap font-mono text-[11px] tabular-nums tracking-wide text-muted-foreground/80 sm:text-[12px]">
+                  <div className="flex shrink-0 items-center whitespace-nowrap pl-[42px] font-mono text-[11px] tabular-nums tracking-wide text-muted-foreground/80 sm:pl-0 sm:text-[12px]">
                     {education.start} - {education.end}
                   </div>
                 </Link>
@@ -155,16 +166,24 @@ export default function Page() {
         <section id="skills">
           <div className="flex min-h-0 flex-col gap-y-4">
             <h2 className="section-label">Skills</h2>
-            <div className="flex flex-wrap gap-2">
-              {DATA.skills.map((skill) => (
-                <div
-                  key={skill.name}
-                  className="flex h-10 w-fit items-center gap-2.5 rounded-full border border-border/80 bg-background/70 px-4 shadow-[0_12px_25px_-22px_rgba(15,23,42,0.65)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-border hover:shadow-[0_10px_20px_-18px_rgba(15,23,42,0.2)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-                >
-                  {skill.icon && <skill.icon className="size-[18px] overflow-hidden rounded object-contain" />}
-                  <span className="text-[15px] font-medium tracking-[-0.01em] text-foreground">{skill.name}</span>
-                </div>
-              ))}
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              {DATA.skills.map((skill) => {
+                // React ships separate light/dark brand marks; the Next.js
+                // badge is a black disc that vanishes on dark, so invert it.
+                const Icon =
+                  skill.name === "React" && isDark ? ReactDark : skill.icon;
+                const themeClass =
+                  skill.name === "Next.js" ? "dark:invert" : "";
+                return (
+                  <div
+                    key={skill.name}
+                    className="flex h-9 w-fit items-center gap-2 rounded-full border border-border/80 bg-background/70 px-3.5 shadow-[0_12px_25px_-22px_rgba(15,23,42,0.65)] transition-all duration-200 ease-out hover:-translate-y-px hover:border-border hover:shadow-[0_10px_20px_-18px_rgba(15,23,42,0.2)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:h-10 sm:gap-2.5 sm:px-4"
+                  >
+                    {<Icon className={`size-4 overflow-hidden rounded object-contain sm:size-[18px] ${themeClass}`} />}
+                    <span className="text-[14px] font-medium tracking-[-0.01em] text-foreground sm:text-[15px]">{skill.name}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>

@@ -10,11 +10,32 @@ import {
 } from "@/components/ui/tooltip";
 import { DATA } from "@/data/resume";
 
+type DockItem = {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+};
+
+const dockItems: DockItem[] = [
+  ...DATA.navbar.map((item) => ({
+    href: item.href,
+    label: item.label,
+    icon: item.icon as DockItem["icon"],
+  })),
+  ...Object.values(DATA.contact.social)
+    .filter((social) => social.navbar)
+    .map((social) => ({
+      href: social.url,
+      label: social.name,
+      icon: social.icon as DockItem["icon"],
+    })),
+];
+
 export default function Navbar() {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-4 z-30 flex justify-center px-3 sm:bottom-5 sm:px-4">
       <Dock className="pointer-events-auto relative mx-auto flex h-[52px] w-fit max-w-[min(88vw,22rem)] items-end gap-1 rounded-full border border-border/50 bg-white/75 px-2 py-1.5 shadow-[0_8px_32px_-16px_rgba(15,23,42,0.14),0_2px_8px_-4px_rgba(15,23,42,0.08)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 dark:border-white/[0.08] dark:bg-[oklch(0.205_0_0)]/85 dark:shadow-[0_16px_40px_-16px_rgba(0,0,0,0.6)]">
-        {DATA.navbar.map((item) => {
+        {dockItems.map((item) => {
           const isExternal = item.href.startsWith("http");
           return (
             <Tooltip key={item.href}>

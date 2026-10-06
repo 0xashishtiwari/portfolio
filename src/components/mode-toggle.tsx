@@ -15,7 +15,7 @@ export function ModeToggle({ className }: { className?: string }) {
       type="button"
       variant="link"
       size="icon"
-      className={cn("transition-transform duration-150 ease-out active:scale-[0.96] motion-reduce:transition-none motion-reduce:active:scale-100", className)}
+      className={cn("relative text-current hover:no-underline transition-transform duration-150 ease-out active:scale-[0.96] motion-reduce:transition-none motion-reduce:active:scale-100", className)}
       onClick={() => {
         play("toggle");
         setTheme(theme === "dark" ? "light" : "dark");

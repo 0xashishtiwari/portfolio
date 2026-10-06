@@ -137,7 +137,7 @@ export default function RootLayout({
               </div>
             </div>
 
-            <footer className="relative z-10 mx-auto max-w-3xl px-4 pb-20 sm:px-6">
+            <footer className="relative z-10 mx-auto w-full max-w-3xl px-4 pb-20 sm:px-6">
               <div className="flex flex-col items-center justify-between gap-3 border-t border-border/40 pt-5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 sm:flex-row">
                 <p>© {new Date().getFullYear()} Ashish Tiwari</p>
 

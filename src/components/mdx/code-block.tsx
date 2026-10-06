@@ -94,6 +94,26 @@ function getCurrentTheme(): "github-light-default" | "github-dark-default" {
     : "github-light-default";
 }
 
+/*
+ * Fences tagged as plain text (e.g. ```text) usually hold terminal
+ * output or other normal text — not source code. They render as a
+ * plain output block instead of the full code editor chrome.
+ */
+const PLAIN_TEXT_LANGUAGES = new Set([
+  "text",
+  "plaintext",
+  "txt",
+  "",
+]);
+
+function normalizeShikiLang(language: string): string {
+  if (PLAIN_TEXT_LANGUAGES.has(language)) {
+    return "plaintext";
+  }
+
+  return language;
+}
+
 export function CodeBlock({
   children,
   ...props
@@ -105,6 +125,7 @@ export function CodeBlock({
     className: "",
     title: null as string | null,
     language: "text",
+    detected: false,
   });
 
   const preRef = useRef<HTMLPreElement>(null);
@@ -162,11 +183,12 @@ export function CodeBlock({
       language,
       title,
       className,
+      detected: true,
     }));
 
     try {
       const result = await codeToHtml(codeText, {
-        lang: language as any,
+        lang: normalizeShikiLang(language) as any,
         theme,
       });
 
@@ -185,6 +207,7 @@ export function CodeBlock({
         className,
         title,
         language,
+        detected: true,
       });
     } catch (error) {
       console.error(
@@ -200,7 +223,7 @@ export function CodeBlock({
         const fallback = await codeToHtml(
           codeText,
           {
-            lang: "text",
+            lang: "plaintext",
             theme,
           }
         );
@@ -219,6 +242,7 @@ export function CodeBlock({
           className,
           title,
           language,
+          detected: true,
         });
       } catch {
         setRenderState({
@@ -226,6 +250,7 @@ export function CodeBlock({
           className,
           title,
           language,
+          detected: true,
         });
       }
     }
@@ -276,6 +301,72 @@ export function CodeBlock({
       );
     }
   };
+
+  const isPlainText =
+    renderState.detected &&
+    PLAIN_TEXT_LANGUAGES.has(renderState.language);
+
+  /*
+   * Plain terminal output / normal text: no editor chrome
+   * (traffic lights, language badge), just readable text.
+   */
+  if (isPlainText) {
+    return (
+      <div
+        className="
+          group
+          relative
+          my-8
+          overflow-hidden
+          rounded-xl
+          border
+          border-border
+          bg-muted/30
+        "
+      >
+        <Button
+          onClick={handleCopy}
+          variant="ghost"
+          size="icon"
+          className="
+            absolute
+            right-2
+            top-2
+            size-7
+            rounded-md
+            text-muted-foreground
+            opacity-0
+            transition-all
+            hover:bg-muted
+            hover:text-foreground
+            focus-visible:opacity-100
+            group-hover:opacity-100
+          "
+          aria-label={
+            copied ? "Copied" : "Copy text"
+          }
+        >
+          {copied ? (
+            <Check className="size-3.5" />
+          ) : (
+            <Copy className="size-3.5" />
+          )}
+        </Button>
+        <pre
+          ref={preRef}
+          {...props}
+          className={cn(
+            "m-0! overflow-x-auto bg-transparent! p-0!",
+            props.className
+          )}
+        >
+          <code className="block min-w-max whitespace-pre px-5 py-4 font-mono text-[13px] leading-6 text-foreground/80">
+            {children}
+          </code>
+        </pre>
+      </div>
+    );
+  }
 
   return (
     <div

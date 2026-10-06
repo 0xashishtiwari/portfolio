@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function X({ size = 10 }: { size?: number }) {
   return (
@@ -36,36 +36,37 @@ function X({ size = 10 }: { size?: number }) {
   );
 }
 
+const X_GAP = 72; // distance between X centers
+const X_TOP_OFFSET = 18; // distance of first/last X from content edges
+
 function Edge({ side }: { side: "left" | "right" }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [xCount, setXCount] = useState(12);
 
-  // Optional: extremely subtle scroll-linked opacity — static lines, X fades slightly when in viewport
+  /*
+   * Size the X marks to the actual content height so both rails
+   * always cover the same span. Each side measures the same parent,
+   * so left and right stay perfectly symmetric on every page and
+   * at every scroll position (no per-side observers to drift apart).
+   */
   useEffect(() => {
-    if (!ref.current) return;
-    const root = ref.current;
-    const xs = Array.from(root.querySelectorAll<HTMLElement>("[data-x]"));
-    if (xs.length === 0 || typeof IntersectionObserver === "undefined") return;
+    const parent = ref.current?.parentElement;
+    if (!parent) return;
 
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          const el = e.target as HTMLElement;
-          if (e.isIntersecting) {
-            el.style.opacity = "0.52";
-          } else {
-            el.style.opacity = "0.34";
-          }
-        }
-      },
-      { rootMargin: "-20% 0px -20% 0px", threshold: 0 }
-    );
-    xs.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
+    const compute = () => {
+      const height = parent.clientHeight;
+      setXCount(
+        Math.max(2, Math.floor((height - X_TOP_OFFSET * 2) / X_GAP))
+      );
+    };
+
+    compute();
+
+    const observer = new ResizeObserver(compute);
+    observer.observe(parent);
+
+    return () => observer.disconnect();
   }, []);
-
-  // Generate X positions — vertically continuous, spaced ~96px (X + 2 gaps)
-  const xCount = 28;
-  const gap = 72; // distance between X centers
 
   return (
     <div
@@ -80,16 +81,14 @@ function Edge({ side }: { side: "left" | "right" }) {
       <div className="absolute inset-y-0 left-[0px] w-px bg-[oklch(0.55_0.01_285_/_0.14)] dark:bg-[oklch(0.7_0.01_285_/_0.13)]" />
       <div className="absolute inset-y-0 right-[0px] w-px bg-[oklch(0.55_0.01_285_/_0.14)] dark:bg-[oklch(0.7_0.01_285_/_0.13)]" />
 
-      {/* X braces — sit entirely between the two lines, gap 10px */}
+      {/* X braces — sit entirely between the two lines, evenly spaced */}
       <div className="absolute inset-0 flex flex-col items-center">
         {Array.from({ length: xCount }).map((_, i) => (
           <div
             key={i}
-            data-x
-            className="absolute flex size-[10px] items-center justify-center text-[oklch(0.45_0.015_285_/_0.42)] dark:text-[oklch(0.78_0.008_285_/_0.42)] transition-opacity duration-500 ease-out"
+            className="absolute flex size-[10px] items-center justify-center text-[oklch(0.45_0.015_285_/_0.42)] dark:text-[oklch(0.78_0.008_285_/_0.42)]"
             style={{
-              top: `${18 + i * gap}px`,
-              opacity: 0.34,
+              top: `${X_TOP_OFFSET + i * X_GAP}px`,
               // ensure X is exactly between the lines (1px inset each side)
               left: "1px",
               width: "10px",

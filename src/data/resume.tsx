@@ -97,7 +97,7 @@ export const DATA = {
   projects: [
     {
       title: "Relay",
-      href: "https://github.com/0xashishtiwari/relay",
+      href: "https://shorturl.at/NPcTJ",
       dates: "Building",
       active: true,
       description:
@@ -105,7 +105,12 @@ export const DATA = {
       technologies: ["TypeScript", "Next.js", "Node.js", "Redis", "LangChain"],
       links: [
         {
-          type: "GitHub",
+          type: "Website",
+          href: "https://shorturl.at/NPcTJ",
+          icon: <Icons.globe className="size-3" />,
+        },
+        {
+          type: "Source",
           href: "https://github.com/0xashishtiwari/relay",
           icon: <Icons.github className="size-3" />,
         },

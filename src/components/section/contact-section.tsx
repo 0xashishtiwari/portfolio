@@ -5,6 +5,7 @@ import { ArrowUpRight, Check, Copy, Mail } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { getCalApi } from "@calcom/embed-react";
 import { DATA } from "@/data/resume";
+import Magnetic from "@/components/magnetic";
 import { MOTION } from "@/lib/motion";
 import { useSound } from "@/lib/sound";
 
@@ -217,12 +218,16 @@ export default function ContactSection() {
             </div>
 
             <div className="flex w-full flex-col items-center gap-3 pt-1 sm:w-auto sm:flex-row sm:items-center sm:justify-center">
-              <WaterButton variant="primary" onClick={handleBook}>
-                Book a call
-              </WaterButton>
-              <WaterButton variant="secondary" href={DATA.contact.social.LinkedIn.url} onClick={handleLinkedIn}>
-                LinkedIn
-              </WaterButton>
+              <Magnetic strength={8} field={16} className="w-full sm:w-auto" innerClassName="w-full sm:w-auto">
+                <WaterButton variant="primary" onClick={handleBook}>
+                  Book a call
+                </WaterButton>
+              </Magnetic>
+              <Magnetic strength={8} field={16} className="w-full sm:w-auto" innerClassName="w-full sm:w-auto">
+                <WaterButton variant="secondary" href={DATA.contact.social.LinkedIn.url} onClick={handleLinkedIn}>
+                  LinkedIn
+                </WaterButton>
+              </Magnetic>
             </div>
 
             {/* Email copy — subtle, centered */}

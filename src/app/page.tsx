@@ -25,6 +25,7 @@ const socialLinks = [
 ];
 
 import RetroComputer from "@/components/retro-computer";
+import Magnetic from "@/components/magnetic";
 
 export default function Page() {
   const { play } = useSound();
@@ -63,23 +64,24 @@ export default function Page() {
             <BlurFade delay={0.18} yOffset={4} duration={MOTION.duration.normal}>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {socialLinks.map(({ label, href, icon: Icon }) => (
-                  <Link
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    onMouseEnter={() => play("hover")}
-                    onFocus={() => play("hover")}
-                    className="group inline-flex h-9 items-center gap-2.5 rounded-full border border-border/60 bg-card/40 px-3.5 pr-4 text-foreground shadow-sm backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-px hover:border-foreground/15 hover:bg-foreground hover:text-background hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-                  >
-                    <span className="flex size-6 items-center justify-center rounded-full bg-background text-foreground ring-1 ring-border/60 transition-colors duration-200 group-hover:bg-background/15 group-hover:text-background group-hover:ring-white/20 motion-reduce:transition-none">
-                      <Icon className="size-3.5 shrink-0" />
-                    </span>
-                    <span className="font-mono text-[11px] font-medium uppercase tracking-[0.12em]">
-                      {label}
-                    </span>
-                  </Link>
+                  <Magnetic key={label} strength={7} field={14} className="shrink-0">
+                    <Link
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      onMouseEnter={() => play("hover")}
+                      onFocus={() => play("hover")}
+                      className="group inline-flex h-9 items-center gap-2.5 rounded-full border border-border/60 bg-card/40 px-3.5 pr-4 text-foreground shadow-sm backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-px hover:border-foreground/15 hover:bg-foreground hover:text-background hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                    >
+                      <span className="flex size-6 items-center justify-center rounded-full bg-background text-foreground ring-1 ring-border/60 transition-colors duration-200 group-hover:bg-background/15 group-hover:text-background group-hover:ring-white/20 motion-reduce:transition-none">
+                        <Icon className="size-3.5 shrink-0" />
+                      </span>
+                      <span className="font-mono text-[11px] font-medium uppercase tracking-[0.12em]">
+                        {label}
+                      </span>
+                    </Link>
+                  </Magnetic>
                 ))}
               </div>
             </BlurFade>

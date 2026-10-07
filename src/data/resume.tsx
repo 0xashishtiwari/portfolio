@@ -59,6 +59,13 @@ export const DATA = {
 
         navbar: false,
       },
+      LeetCode: {
+        name: "LeetCode",
+        url: "https://leetcode.com/1xashishtiwari",
+        icon: Icons.leetcode,
+
+        navbar: false,
+      },
       email: {
         name: "Send Email",
         url: "mailto:ashishinrewa@gmail.com",

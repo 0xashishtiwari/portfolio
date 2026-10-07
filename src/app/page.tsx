@@ -9,6 +9,7 @@ import Markdown from "react-markdown";
 import ContactSection from "@/components/section/contact-section";
 import ProjectsSection from "@/components/section/projects-section";
 import GitHubSection from "@/components/section/github-section";
+import LeetCodeSection from "@/components/section/leetcode-section";
 
 import { ArrowUpRight } from "lucide-react";
 import { Icons } from "@/components/icons";
@@ -193,6 +194,13 @@ export default function Page() {
       <BlurFade delay={0.04} yOffset={12} duration={MOTION.duration.slow} inView inViewMargin="-50px">
         <section id="github">
           <GitHubSection />
+        </section>
+      </BlurFade>
+
+      {/* LeetCode — single reveal */}
+      <BlurFade delay={0.04} yOffset={12} duration={MOTION.duration.slow} inView inViewMargin="-50px">
+        <section id="leetcode">
+          <LeetCodeSection />
         </section>
       </BlurFade>
 
